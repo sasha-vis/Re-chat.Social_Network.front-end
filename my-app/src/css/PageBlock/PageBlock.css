@@ -1,0 +1,134 @@
+.page-block {
+    background-color: #edeef0;
+    padding: 30px;
+}
+
+.page-block-wrapper {
+    display: flex;
+}
+
+.nav {
+    width: 30%;
+}
+
+.nav-list {
+    height: 70%;
+}
+
+.nav-list span {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    background-size: 100%;
+}
+
+.nav-list li a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-list li:not(:last-child) {
+    margin-bottom: 20px;
+}
+
+.nav-list li h3 {
+    width: 70%;
+}
+
+.nav-list .sign-in-logo {
+    background-image: url("./../../images/sign-in-icon.png");
+}
+
+.nav-list .sign-up-logo {
+    background-image: url("./../../images/sign-up-icon.png");
+}
+
+.title-wrapper,
+.post {
+    padding: 30px;
+    margin-bottom: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 1px solid #dbdbdb;
+}
+
+.title-wrapper h3 {
+    margin-bottom: 30px;
+}
+
+.post-author {
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.author-img {
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+    background-image: url('./../../images/df-user-icon.png');
+    background-size: 100%;
+
+    margin-right: 30px;
+}
+
+.post-content h3 {
+    margin-bottom: 10px;
+}
+
+.post-controllers {
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+}
+
+/* .post-controllers div {
+    width: 25px;
+    height: 25px;
+} */
+
+.post-controllers button:not(:last-child) {
+    margin-right: 30px;
+}
+
+.post-controllers button {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    justify-content: center;
+
+    background-color: transparent;
+    border: none;
+}
+
+.post-controllers .like-icon,
+.post-controllers .comment-icon,
+.post-controllers .bookmark-icon {
+    display: inline-block;
+
+    background-size: 100%;
+}
+
+.post-controllers .like-icon {
+    background-image: url('./../../images/heart-icon.png');
+
+    width: 25px;
+    height: 25px;
+}
+
+.post-controllers .comment-icon {
+    background-image: url('./../../images/comment-icon.png');
+
+    width: 25px;
+    height: 25px;
+}
+
+.post-controllers .bookmark-icon {
+    background-image: url('./../../images/bookmark-icon.png');
+
+    width: 20px;
+    height: 20px;
+
+    margin-top: 1px;
+}
