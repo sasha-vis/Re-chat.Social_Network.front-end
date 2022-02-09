@@ -1,7 +1,14 @@
+import React from "react";
+
+import HeaderIfNotAuth from "./HeaderIfNotAuth.js";
+import HeaderIfAuth from "./HeaderIfAuth.js";
+
 import logo from './../images/logo.png';
 import './../css/Header/Header.css';
 
-function Header() {
+import {connect} from "react-redux";
+
+function Header(props) {
     return (
         <header className="header">
             <div className="container">
@@ -9,14 +16,16 @@ function Header() {
                     <div>
                         <img className='logo' src={logo}></img>
                     </div>
-                    <div className='auth-block'>
-                        <button className='sign-in'>Sign In</button>
-                        <button className='sign-up'>Sign Up</button>
-                    </div>
+                    {props.isLog.isLog !== true ? <HeaderIfNotAuth /> : <HeaderIfAuth />}
                 </div>
             </div>
         </header>
     )
 }
 
-export default Header;
+const mapStateToProps = (state) => ({
+    isLog: state.isLog
+})
+
+export default connect(mapStateToProps)(Header);
+// export default Header;
