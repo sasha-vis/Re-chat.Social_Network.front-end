@@ -11,7 +11,13 @@
 
 .posts-block,
 .sign-up-block,
-.sign-in-block {
+.sign-in-block,
+.user-block,
+.messenger-block,
+.photo-block,
+.friends-block,
+.bookmark-block,
+.favorites-block {
     display: flex;
     height: 100%;
 }
@@ -73,7 +79,7 @@
     border: 1px solid #dbdbdb;
 }
 
-.title-wrapper h3,
+.title-wrapper > h3,
 .title-wrapper .create-post {
     margin-top: 30px;
 }
@@ -262,4 +268,71 @@
 
 .comments-controllers button:hover {
     background-color: #15be60;
+}
+
+.display-block {
+    display: block !important;
+}
+
+.new-post {
+    margin-top: 60px;
+    display: none;
+}
+
+.new-post .title-name {
+    margin-bottom: 15px;
+}
+
+.new-post .title-name input {
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #393646;
+}
+
+.new-post .content {
+    height: 100px;
+}
+
+.new-post .content textarea {
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    border: 2px solid #393646;
+    padding: 10px;
+}
+
+.post-controllers .attach-btn {
+    position: relative;
+}
+
+.post-controllers .confirm-btn {
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    width: 150px;
+    height: 40px;
+    font-size: 18px;
+    background-color: #81aac5;
+}
+
+.post-controllers .confirm-btn:hover {
+    background-color: #c2d7e5;
+}
+
+.post-controllers .attach-btn img {
+    width: 25px;
+}
+
+.post-controllers .attach-btn input {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    opacity: 0;
+}
+
+.post-controllers .close-btn {
+    margin-left: auto;
+}
+
+.post-controllers .close-btn img {
+    width: 25px;
 }

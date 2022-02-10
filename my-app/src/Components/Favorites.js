@@ -1,6 +1,19 @@
 import React from "react";
 import NavIfNotAuth from "./NavIfNotAuth.js";
 import NavIfAuth from "./NavIfAuth.js";
+import { NavLink } from "react-router-dom";
+
+import leftArrow from './../images/left-arrow.png';
+
+import {connect} from "react-redux";
+
+import { changeButton } from './../actions/isLog.action';
+
+import './../css/PageBlock/Profile.css';
+
+import userAvatar from './../images/15.jpg';
+
+import friendIcon from './../images/df-user-icon.png';
 
 import likeIcon from './../images/heart-icon.png';
 import commentIcon from './../images/comment-icon.png';
@@ -13,8 +26,6 @@ import authorIcon from './../images/df-user-icon.png';
 
 import attachBtn from './../images/attachments.png';
 import closeIcon from './../images/close.png';
-
-import {connect} from "react-redux";
 
 function changeLikeBtn(event) {
     let button = event.target;
@@ -62,42 +73,38 @@ function closePost(event) {
     closeBtn.classList.remove('display-block');
 }
 
-function Posts(props){
+function openEditor(event) {
+    let userBlock = event.target.closest('.user-block').children[2];
+
+    userBlock.classList.toggle('display-block');
+}
+
+function closePopup(event) {
+    let closeBtn = event.target.closest('.popup');
+
+    closeBtn.classList.remove('display-block');
+}
+
+function Favorites(props) {
     return (
-        <div className="posts-block">
+        <div className="favorites-block">
             <nav className="nav">
-                {props.isLog.isLog !== true ? <NavIfNotAuth /> : <NavIfAuth />}
+                <ul className="nav-list">
+                    {props.isLog.isLog !== true ? <NavIfNotAuth /> : <NavIfAuth />}
+                </ul>
             </nav>
             <main className="main">
                 <div className='title-wrapper'>
-                    <h1>Posts line</h1>
-                    {props.isLog.isLog !== true ? <h3>If you want to create any post, you need to be authorized</h3> : <button onClick={createPost} className="create-post">Create post</button>}
-                    <div className="new-post">
-                        <div className="post-author">
-                            <img className="author-img" src={authorIcon}></img>
-                            <h3>Sasha Vysotski</h3>
-                        </div>
-                        <div className="post-content">
-                            <div className="title-name">
-                                <input placeholder="Insert title"></input>
-                            </div>
-                            <div className="content">
-                                <textarea></textarea>
-                            </div>
-                        </div>
-                        <div className="post-controllers">
-                            <button className="confirm-btn">Send new post</button>
-                            <button className="attach-btn"><img src={attachBtn}></img><input type="file"></input></button>
-                            <button className="close-btn" onClick={closePost}><img className="close-icon" src={closeIcon}></img></button>
-                        </div>
-                    </div>
+                    <h1>Favorites</h1>
                 </div>
+
                 <ul className="posts-list">
 
                     <li className="post">
                         <div className="post-author">
                             <img className="author-img" src={authorIcon}></img>
                             <h3>Sasha Vysotski</h3>
+                            <button className="close-btn"><img className="close-icon" src={closeIcon}></img></button>
                         </div>
                         <div className="post-content">
                             <h3>Title</h3>
@@ -165,6 +172,7 @@ function Posts(props){
                         <div className="post-author">
                             <img className="author-img" src={authorIcon}></img>
                             <h3>Artem Kasabuka</h3>
+                            <button className="close-btn"><img className="close-icon" src={closeIcon}></img></button>
                         </div>
                         <div className="post-content">
                             <h3>Title</h3>
@@ -232,6 +240,7 @@ function Posts(props){
                         <div className="post-author">
                             <img className="author-img" src={authorIcon}></img>
                             <h3>Pasha Motuz</h3>
+                            <button className="close-btn"><img className="close-icon" src={closeIcon}></img></button>
                         </div>
                         <div className="post-content">
                             <h3>Title</h3>
@@ -299,6 +308,7 @@ function Posts(props){
                         <div className="post-author">
                             <img className="author-img" src={authorIcon}></img>
                             <h3>Ksenia Malishevskaya</h3>
+                            <button className="close-btn"><img className="close-icon" src={closeIcon}></img></button>
                         </div>
                         <div className="post-content">
                             <h3>Title</h3>
@@ -366,6 +376,7 @@ function Posts(props){
                         <div className="post-author">
                             <img className="author-img" src={authorIcon}></img>
                             <h3>Elena Samoilenko</h3>
+                            <button className="close-btn"><img className="close-icon" src={closeIcon}></img></button>
                         </div>
                         <div className="post-content">
                             <h3>Title</h3>
@@ -433,6 +444,7 @@ function Posts(props){
                         <div className="post-author">
                             <img className="author-img" src={authorIcon}></img>
                             <h3>Kostya Bykovskih</h3>
+                            <button className="close-btn"><img className="close-icon" src={closeIcon}></img></button>
                         </div>
                         <div className="post-content">
                             <h3>Title</h3>
@@ -500,6 +512,7 @@ function Posts(props){
                         <div className="post-author">
                             <img className="author-img" src={authorIcon}></img>
                             <h3>Nikita Glinistiy</h3>
+                            <button className="close-btn"><img className="close-icon" src={closeIcon}></img></button>
                         </div>
                         <div className="post-content">
                             <h3>Title</h3>
@@ -567,6 +580,7 @@ function Posts(props){
                         <div className="post-author">
                             <img className="author-img" src={authorIcon}></img>
                             <h3>Kirill Yarockiy</h3>
+                            <button className="close-btn"><img className="close-icon" src={closeIcon}></img></button>
                         </div>
                         <div className="post-content">
                             <h3>Title</h3>
@@ -630,6 +644,7 @@ function Posts(props){
                         </div>
                     </li>
                 </ul>
+
             </main>
         </div>
     )
@@ -638,7 +653,9 @@ function Posts(props){
 const mapStateToProps = (state) => ({
     isLog: state.isLog
 })
-
-export default connect(mapStateToProps)(Posts);
-
-// export default Posts;
+  
+const mapDispatchToProps = (dispatch) => ({
+    changeButton: (data) => dispatch(changeButton(data))
+})
+  
+export default connect(mapStateToProps, mapDispatchToProps)(Favorites);

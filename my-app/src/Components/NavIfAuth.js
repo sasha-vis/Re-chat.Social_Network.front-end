@@ -17,13 +17,12 @@ import { changeButton } from './../actions/isLog.action';
 function NavIfAuth(props) {
     return (
         <ul className="nav-list">
-            <li><NavLink to="/SignIn"><img className='sign-in-logo' src={profileLogo}></img><h3 className='sign-in-title'>My Profile</h3></NavLink></li>
+            <li><NavLink to="/Profile"><img className='sign-in-logo' src={profileLogo}></img><h3 className='sign-in-title'>My Profile</h3></NavLink></li>
             <li><NavLink to="/"><img className='sign-in-logo' src={homeLogo}></img><h3 className='sign-in-title'>Main page</h3></NavLink></li>
-            <li><NavLink to="/"><img className='sign-in-logo' src={messengerLogo}></img><h3 className='sign-in-title'>Messenger</h3></NavLink></li>
-            <li><NavLink to="/"><img className='sign-in-logo' src={friendsLogo}></img><h3 className='sign-in-title'>Friends</h3></NavLink></li>
-            <li><NavLink to="/"><img className='sign-in-logo' src={photoLogo}></img><h3 className='sign-in-title'>My photo</h3></NavLink></li>
-            <li><NavLink to="/"><img className='sign-in-logo' src={bookmarkLogo}></img><h3 className='sign-in-title'>Bookmarks</h3></NavLink></li>
-            <li><NavLink to="/"><img className='sign-in-logo' src={likeLogo}></img><h3 className='sign-in-title'>Favorites</h3></NavLink></li>
+            <li><NavLink to="/Messenger"><img className='sign-in-logo' src={messengerLogo}></img><h3 className='sign-in-title'>Messenger</h3></NavLink></li>
+            <li><NavLink to="/Friends"><img className='sign-in-logo' src={friendsLogo}></img><h3 className='sign-in-title'>Friends</h3></NavLink></li>
+            <li><NavLink to="/Bookmarks"><img className='sign-in-logo' src={bookmarkLogo}></img><h3 className='sign-in-title'>Bookmarks</h3></NavLink></li>
+            <li><NavLink to="/Favorites"><img className='sign-in-logo' src={likeLogo}></img><h3 className='sign-in-title'>Favorites</h3></NavLink></li>
             <li className="exit"><NavLink to="/" onClick={() => props.changeButton()}><img className='sign-in-logo' src={exitLogo}></img><h3 className='sign-in-title'>Exit</h3></NavLink></li>
         </ul>
     )

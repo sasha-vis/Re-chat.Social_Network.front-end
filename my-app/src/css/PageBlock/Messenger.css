@@ -1,0 +1,21 @@
+.messenger {
+    display: flex;
+    justify-content: space-between;
+}
+
+.messenger-left {
+    width: 40%;
+    margin-right: 30px;
+}
+
+.messenger-right {
+    width: calc(60% - 30px);
+}
+
+.messages {
+    padding: 30px;
+    margin-bottom: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 1px solid #dbdbdb;
+}
