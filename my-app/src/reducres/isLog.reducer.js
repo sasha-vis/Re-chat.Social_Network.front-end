@@ -9,7 +9,7 @@ if (localStorage.getItem('isLog') === null) {
 defaultData = { isLog: JSON.parse(localStorage.getItem('isLog')).isLog }
 }
 
-export default (state = defaultData, action) => {
+let result = (state = defaultData, action) => {
   switch (action.type) {
       case CHANGE_BUTTON:
               let value;
@@ -28,3 +28,5 @@ export default (state = defaultData, action) => {
           return state;
   }
 };
+
+export default result;

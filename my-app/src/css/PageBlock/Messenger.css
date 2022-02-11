@@ -12,10 +12,152 @@
     width: calc(60% - 30px);
 }
 
-.messages {
+.messages-list {
     padding: 30px;
     margin-bottom: 30px;
     background-color: #fff;
     border-radius: 10px;
     border: 1px solid #dbdbdb;
+}
+
+.messages {
+    border: 1px solid #cdc9c9;
+    height: 410px;
+    overflow: scroll;
+}
+
+.messages li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    height: 35px;
+}
+
+.messages li:hover {
+    cursor: pointer;
+    background-color: #ededed;
+}
+
+.messages li:not(:first-child) {
+    border-top: 1px solid #cdc9c9;
+}
+
+.messages li .message-img {
+    width: 35px;
+}
+
+.message-item {
+    width: 70%;
+}
+
+.message-item h3 {
+    margin-bottom: 10px;
+}
+
+.messages li .open-msg-btn {
+    width: 13px;
+    transform: rotate(180deg);
+}
+
+.current-message-block {
+    padding: 30px;
+    margin-bottom: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 1px solid #dbdbdb;
+}
+
+.message-header img {
+    width: 40px;
+}
+
+.current-message {
+    border: 1px solid #cdc9c9;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.message-header {
+    border-bottom: 1px solid #cdc9c9;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.message-header .user-name {
+    margin-right: 10px;
+}
+
+.all-message-content {
+    flex-grow: 1;
+}
+
+.message-controller {
+    border-top: 1px solid #cdc9c9;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.message-controller input {
+    padding: 10px;
+    width: 80%;
+    font-size: 16px;
+    border: 1px solid #393646;
+}
+
+.message-controller button {
+    padding: 5px;
+    background-color: transparent;
+    border: none;
+}
+
+.message-controller button:hover img {
+    transform: scale(1.1);
+}
+
+.message-controller button img {
+    width: 22px;
+}
+
+.current-message-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 15px 0 15px;
+}
+
+.current-message-item img {
+    width: 30px;
+    margin-right: 15px;
+}
+
+.message-item-content {
+    width: 100%;
+}
+
+.message-item-content h3 {
+    height: 30px;
+    display: flex;
+    align-items: center;
+
+    font-size: 16px;
+}
+
+.message-item-content p {
+    font-size: 14px;
+}
+
+.message-date {
+    text-align: end;
+    color: gray;
+    font-size: 14px;
+}
+
+.message-list {
+    overflow: scroll;
+    height: 266px;
 }

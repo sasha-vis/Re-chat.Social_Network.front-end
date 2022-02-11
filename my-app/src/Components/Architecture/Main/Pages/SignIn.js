@@ -1,20 +1,19 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import leftArrow from './../images/left-arrow.png';
-
 import {connect} from "react-redux";
+import { changeButton } from './../../../../actions/isLog.action';
 
-import { changeButton } from './../actions/isLog.action';
+import NavForAuth from './../Nav/Common/NavForAuth.js';
+import Button from "../../../Common/Button";
+import Input from "../../../Common/Input";
 
 function SignIn(props) {
     return (
         <div className="sign-in-block">
-            <nav className="nav">
-                <ul className="nav-list">
-                    <li><NavLink to="/"><img className='sign-in-logo' src={leftArrow}></img><h3 className='sign-in-title'>Main page</h3></NavLink></li>
-                </ul>
-            </nav>
+
+            <NavForAuth />
+
             <main className="main">
                 <div className='title-wrapper'>
                     <h1>Log in</h1>
@@ -22,9 +21,9 @@ function SignIn(props) {
                 </div>
 
                 <form className="auth-form">
-                    <div><input placeholder="Insert mail"></input></div>
-                    <div><input placeholder="Insert password"></input></div>
-                    <button><NavLink to="/" onClick={() => props.changeButton()}>Sign in</NavLink></button>
+                    <div><Input placeholder="Insert email" /></div>
+                    <div><Input placeholder="Insert password" /></div>
+                    <Button innerHTML={<NavLink to="/" onClick={() => props.changeButton()}>Sign in</NavLink>} />
                 </form>
 
             </main>
@@ -41,6 +40,3 @@ const mapDispatchToProps = (dispatch) => ({
 })
   
 export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
-
-
-// export default SignIn;
