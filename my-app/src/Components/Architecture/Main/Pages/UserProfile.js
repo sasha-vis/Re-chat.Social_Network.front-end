@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { NavLink } from "react-router-dom";
 
 import Nav from './../Nav/Nav.js';
@@ -12,6 +12,20 @@ import userAvatar from './../../../../images/15.jpg';
 import authorIcon from './../../../../images/df-user-icon.png';
 import attachBtn from './../../../../images/attachments.png';
 import closeIcon from './../../../../images/close.png';
+
+async function getData(setData) {
+    if (localStorage.getItem('token') !== null) {
+        let token = JSON.parse(localStorage.getItem('token')).user[2];
+    
+        await fetch(`https://localhost:7103/User/${token}`)
+        .then((response) => {
+        return response.json();
+        })
+        .then((data) => {
+            setData(data);
+        });
+    }
+}
 
 function createPost(event) {
     let newPost = event.target.closest('div').children[2];
@@ -38,6 +52,10 @@ function closePopup(event) {
 }
 
 function UserProfile() {
+    const [data, setData] = useState('');
+
+    getData(setData);
+
     return (
         <div className="user-block">
 
@@ -51,16 +69,16 @@ function UserProfile() {
                 <div className="user-profile">
                     <div className="user-profile-left">
                         <div className="user-avatar">
-                            <img src={userAvatar} alt="User"></img>
+                            <img src={authorIcon} alt="User"></img>
                             <Button className="edit-btn" onClick={openEditor} innerHTML="Edit profile" />
                         </div>
                     </div>
                     <div className="user-profile-right">
                         <div className="user-info">
-                            <div className="user-name">Name: <span>Sasha</span></div>
-                            <div className="user-surname">Surname: <span>Vysoski</span></div>
-                            <div className="user-gender">Gender: <span>Male</span></div>
-                            <div className="user-birthdate">Birth date: <span>10.09.1998</span></div>
+                            <div className="user-name">Name: <span>{data.name}</span></div>
+                            <div className="user-surname">Surname: <span>{data.surname}</span></div>
+                            <div className="user-gender">Gender: <span>{data.gender}</span></div>
+                            <div className="user-birthdate">Birth date: <span>{data.birthdayDate}</span></div>
                             <hr/>
                             <div className="user-count">
                                 <div className="friends-count"><NavLink to='/Friends'><span className="count">17</span>friends</NavLink></div>

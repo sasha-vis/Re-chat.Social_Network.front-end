@@ -13,7 +13,7 @@ let result = (state = defaultData, action) => {
   switch (action.type) {
       case CHANGE_BUTTON:
               let value;
-              if (state.isLog === false) {
+              if (localStorage.getItem('token') !== null) {
                 value = true;
               } else {
                 value = false;

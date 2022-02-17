@@ -12,7 +12,10 @@ import bookmarkLogo from './../../../../../images/bookmark-icon.png';
 import likeLogo from './../../../../../images/heart-icon.png';
 import exitLogo from './../../../../../images/log-out.png';
 
-
+function exitAccount(props) {
+    if(localStorage.getItem('token')) localStorage.removeItem('token');
+    props.changeButton();
+}
 
 function NavIfAuth(props) {
     return (
@@ -23,7 +26,7 @@ function NavIfAuth(props) {
             <li><NavLink to="/Friends"><img className='sign-in-logo' src={friendsLogo} alt="friends icon"></img><h3 className='sign-in-title'>Friends</h3></NavLink></li>
             <li><NavLink to="/Bookmarks"><img className='sign-in-logo' src={bookmarkLogo} alt="bookmarks icon"></img><h3 className='sign-in-title'>Bookmarks</h3></NavLink></li>
             <li><NavLink to="/Favorites"><img className='sign-in-logo' src={likeLogo} alt="favorites icon"></img><h3 className='sign-in-title'>Favorites</h3></NavLink></li>
-            <li className="exit"><NavLink to="/" onClick={() => props.changeButton()}><img className='sign-in-logo' src={exitLogo} alt="exit icon"></img><h3 className='sign-in-title'>Exit</h3></NavLink></li>
+            <li className="exit"><NavLink to="/" onClick={() => exitAccount(props)}><img className='sign-in-logo' src={exitLogo} alt="exit icon"></img><h3 className='sign-in-title'>Exit</h3></NavLink></li>
         </ul>
     )
 }
