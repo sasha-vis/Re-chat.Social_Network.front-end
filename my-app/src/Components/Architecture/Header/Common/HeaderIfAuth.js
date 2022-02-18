@@ -10,9 +10,15 @@ import Button from "../../../Common/Button";
 
 async function getData(setData) {
     if (localStorage.getItem('token') !== null) {
-        let token = JSON.parse(localStorage.getItem('token')).user[2];
+        let userId = JSON.parse(localStorage.getItem('token')).user[2];
+        let token = JSON.parse(localStorage.getItem('token')).token;
     
-        await fetch(`https://localhost:7103/User/${token}`)
+        await fetch(`https://localhost:7103/User/${userId}`, {
+            method: 'GET',
+            headers: {
+                "Accept": "application/json",
+                "Authorization": "Bearer " + token
+            }})
         .then((response) => {
         return response.json();
         })

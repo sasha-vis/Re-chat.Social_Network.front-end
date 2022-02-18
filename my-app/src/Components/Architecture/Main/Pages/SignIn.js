@@ -9,7 +9,7 @@ import Button from "../../../Common/Button";
 import Input from "../../../Common/Input";
 // import axios from "axios";
 
-const url = 'https://localhost:7103/User/Login';
+const url = 'https://localhost:7103/Account/Login';
 
 async function login(data, props) {
     try {
@@ -21,7 +21,6 @@ async function login(data, props) {
         }
     });
     const json = await response.json();
-    console.log('Успех:', JSON.stringify(json));
     if (json.token) {
         localStorage.setItem("token", JSON.stringify(json));
         props.changeButton();

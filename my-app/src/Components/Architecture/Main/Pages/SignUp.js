@@ -8,7 +8,7 @@ import NavForAuth from "./../Nav/Common/NavForAuth.js";
 import Button from "../../../Common/Button";
 import Input from "../../../Common/Input";
 
-const url = 'https://localhost:7103/User/Registration';
+const url = 'https://localhost:7103/Account/Registration';
 
 async function registration(data, props) {
     try {
