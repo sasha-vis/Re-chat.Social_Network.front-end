@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 
 import likeIcon from './../../../../../images/heart-icon.png';
 import likedIcon from './../../../../../images/heart-slctd-icon.png';
@@ -44,76 +44,101 @@ function openComments(event) {
     comments.classList.toggle('display-flex');
 }
 
+async function getData(setData) {
+    // if (localStorage.getItem('token') !== null) {
+        // let userId = JSON.parse(localStorage.getItem('token')).user[2];
+        // let token = JSON.parse(localStorage.getItem('token')).token;
+    
+        await fetch(`https://localhost:7103/Post`, {
+            method: 'GET'
+            // headers: {
+            //     "Accept": "application/json",
+            //     "Authorization": "Bearer " + token
+            })
+        .then((response) => {
+        return response.json();
+        })
+        .then((data) => {
+            setData(data);
+        });
+    // }
+}
+
 function PostsList(props) {
+    const [data, setData] = useState([]);
+    console.log(data)
+
+    // getData(setData);
+
     return (
         <ul className="posts-list">
-            <li className="post">
-                <div className="post-author">
-                    <img className="author-img" src={authorIcon} alt="User"></img>
-                    <h3>Sasha Vysotski</h3>
-                    {props.dltBtn}
-                </div>
-                <div className="post-content">
-                    <h3>Title</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                        cursus sem vitae, ullamcorper lacus. Cras eu elit leo. Pellentesque at imperdiet dui, sed consectetur risus. 
-                        Fusce vitae pulvinar lacus. Pellentesque elementum quis neque nec suscipit. Nunc id dolor egestas, aliquam lorem ac, ultrices sem. 
-                        In in tristique urna.</p>
-                </div>
-                <div className="post-controllers">
-                    <Button onClick={changeLikeBtn} innerHTML={<img className="like-icon" src={likeIcon} alt="Like icon"></img>} />
-                    <Button onClick={openComments} innerHTML={<img className="comment-icon" src={commentIcon} alt="Comment icon"></img>} />
-                    <Button onClick={changeBookmarkBtn} innerHTML={<img className="bookmark-icon" src={bookmarkIcon} alt="Bookmark icon"></img>} />
-                </div>
-                <div className="comments">
-                    <ul className="comments-list">
-                        <li>
-                            <div className="comment-author">
-                                <img className="comment-img" src={authorIcon} alt="User"></img>
-                                <span>Name</span>
+            {/* {data.length !== 0 ?
+                data.map((item, index) => 
+                    <li className="post">
+                        <div className="post-author">
+                            <img className="author-img" src={authorIcon} alt="User"></img>
+                            <h3><span>{item.userName}</span> <span>{item.userSurname}</span></h3>
+                            {props.dltBtn}
+                        </div>
+                        <div className="post-content">
+                            <h3>{item.title}</h3>
+                            <p>{item.content}</p>
+                        </div>
+                        <div className="post-controllers">
+                            <Button onClick={changeLikeBtn} innerHTML={<img className="like-icon" src={likeIcon} alt="Like icon"></img>} />
+                            <Button onClick={openComments} innerHTML={<img className="comment-icon" src={commentIcon} alt="Comment icon"></img>} />
+                            <Button onClick={changeBookmarkBtn} innerHTML={<img className="bookmark-icon" src={bookmarkIcon} alt="Bookmark icon"></img>} />
+                        </div>
+                        <div className="comments">
+                            <ul className="comments-list">
+                                <li>
+                                    <div className="comment-author">
+                                        <img className="comment-img" src={authorIcon} alt="User"></img>
+                                        <span>Name</span>
+                                    </div>
+                                    <div className="comment-content">
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                    </div>
+                                </li>
+                                <li>
+                                    <div className="comment-author">
+                                        <img className="comment-img" src={authorIcon} alt="User"></img>
+                                        <span>Name</span>
+                                    </div>
+                                    <div className="comment-content">
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                    </div>
+                                </li>
+                                <li>
+                                    <div className="comment-author">
+                                        <img className="comment-img" src={authorIcon} alt="User"></img>
+                                        <span>Name</span>
+                                    </div>
+                                    <div className="comment-content">
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                        dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
+                                    </div>
+                                </li>
+                            </ul>
+                            <div className="comments-controllers">
+                                <Input placeholder="Insert comment" />
+                                <Button innerHTML="Send" />
                             </div>
-                            <div className="comment-content">
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                            </div>
-                        </li>
-                        <li>
-                            <div className="comment-author">
-                                <img className="comment-img" src={authorIcon} alt="User"></img>
-                                <span>Name</span>
-                            </div>
-                            <div className="comment-content">
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                            </div>
-                        </li>
-                        <li>
-                            <div className="comment-author">
-                                <img className="comment-img" src={authorIcon} alt="User"></img>
-                                <span>Name</span>
-                            </div>
-                            <div className="comment-content">
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                                dolor sit amet, consectetur adipiscing elit. Nulla bibendum quam hendrerit,
-                            </div>
-                        </li>
-                    </ul>
-                    <div className="comments-controllers">
-                        <Input placeholder="Insert comment" />
-                        <Button innerHTML="Send" />
-                    </div>
-                </div>
-            </li>
+                        </div>
+                    </li>
+                ) : ''} */}
         </ul>
     )
 }
