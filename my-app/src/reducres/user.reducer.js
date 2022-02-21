@@ -1,21 +1,23 @@
-// import { CHANGE_BUTTON } from './../constants/isLog.constants';
+import { GET_USER } from './../constants/user.constants';
+import { SET_USER } from './../constants/user.constants';
 
-let defaultData = null;
 
-if (localStorage.getItem('token')) {
-    let token = JSON.parse(localStorage.getItem('token')).user[2];
+let defaultData = [];
 
-    defaultData = fetch(`https://localhost:7103/User/${token}`)
-    .then((response) => {
-    return response.json();
-    })
-    .then((data) => {
-        defaultData = { userProfile: data }
-    });
-}
+// if (localStorage.getItem('isLog') === null) {
+//   defaultData = { isLog: false }
+//   localStorage.setItem('isLog', JSON.stringify(defaultData));
+// } else {
+// defaultData = { isLog: JSON.parse(localStorage.getItem('isLog')).isLog }
+// }
 
 let result = (state = defaultData, action) => {
   switch (action.type) {
+      case SET_USER:
+        return ({
+            ...state,
+            user: action.data
+        });
     //   case CHANGE_BUTTON:
     //           let value;
     //           if (localStorage.getItem('token') !== null) {

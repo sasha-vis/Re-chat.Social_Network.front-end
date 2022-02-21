@@ -6,6 +6,7 @@ import commentIcon from './../../../../../images/comment-icon.png';
 import bookmarkIcon from './../../../../../images/bookmark-icon.png';
 import bookmarkedIcon from './../../../../../images/bookmark-slctd-icon.png';
 import authorIcon from './../../../../../images/df-user-icon.png';
+import closeIcon from './../../../../../images/close.png';
 
 import Button from "../../../../Common/Button";
 import Input from "../../../../Common/Input";
@@ -47,7 +48,13 @@ function openComments(event) {
 }
 
 async function getData(setData) {
-    await fetch(`https://localhost:7103/Post`)
+    let token = JSON.parse(localStorage.getItem('token')).token;
+    await fetch(`https://localhost:7103/Post/MyPosts`, {
+            method: 'GET',
+            headers: {
+                "Accept": "application/json",
+                "Authorization": "Bearer " + token
+            }})
     .then((response) => {
     return response.json();
     })
@@ -56,22 +63,45 @@ async function getData(setData) {
     });
 }
 
-function PostsList(props) {
+async function deletePost(event, setData) {
+    const itemId = event.target.closest('li').dataset.id;
+    // console.log(event.target)
+
+    let token = JSON.parse(localStorage.getItem('token')).token;
+        
+    await fetch(`https://localhost:7103/Post/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+            "Accept": "application/json",
+            "Authorization": "Bearer " + token
+        }})
+    .then((response) => {
+    return response.json();
+    })
+    .then((data) => {
+        setData(data);
+    });
+
+}
+
+function MyPostsList(props) {
     const [data, setData] = useState([]);
 
     useEffect(function(){
         getData(setData);
     }, []);
 
+    // console.log(props)
+
     return (
         <ul className="posts-list">
             {data.length !== 0 ?
                 data.map((item, index) => 
-                    <li className="post" key={index}>
+                    <li className="post" key={index} data-id={item.id}>
                         <div className="post-author">
                             <img className="author-img" src={authorIcon} alt="User"></img>
                             <h3><span>{item.userName}</span> <span>{item.userSurname}</span></h3>
-                            {props.dltBtn}
+                            <Button className="close-btn" onClick={(event) => deletePost(event, setData)} innerHTML={<img className="close-icon" src={closeIcon} alt="Close-icon"></img>} />
                         </div>
                         <div className="post-content">
                             <h3>{item.title}</h3>
@@ -144,4 +174,4 @@ const mapStateToProps = (state) => ({
 //     changeButton: (data) => dispatch(changeButton(data))
 // })
   
-export default connect(mapStateToProps)(PostsList);
+export default connect(mapStateToProps)(MyPostsList);

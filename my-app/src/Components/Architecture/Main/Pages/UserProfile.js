@@ -1,8 +1,8 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { NavLink } from "react-router-dom";
 
 import Nav from './../Nav/Nav.js';
-import PostsList from "./Lists/PostsList.js";
+import MyPostsList from "./Lists/MyPostsList.js";
 import Button from "./../../../Common/Button.js";
 import Input from "../../../Common/Input.js";
 
@@ -13,25 +13,10 @@ import authorIcon from './../../../../images/df-user-icon.png';
 import attachBtn from './../../../../images/attachments.png';
 import closeIcon from './../../../../images/close.png';
 
-async function getData(setData) {
-    if (localStorage.getItem('token') !== null) {
-        let userId = JSON.parse(localStorage.getItem('token')).user[2];
-        let token = JSON.parse(localStorage.getItem('token')).token;
-    
-        await fetch(`https://localhost:7103/User/${userId}`, {
-            method: 'GET',
-            headers: {
-                "Accept": "application/json",
-                "Authorization": "Bearer " + token
-            }})
-        .then((response) => {
-        return response.json();
-        })
-        .then((data) => {
-            setData(data);
-        });
-    }
-}
+import { getData } from './../../../../actions/user.action';
+import {connect} from "react-redux";
+
+
 
 function createPost(event) {
     let newPost = event.target.closest('div').children[2];
@@ -57,10 +42,24 @@ function closePopup(event) {
     closeBtn.classList.remove('display-block');
 }
 
-function UserProfile() {
-    const [data, setData] = useState('');
 
-    getData(setData);
+
+function UserProfile(props) {
+    // const [data, setData] = useState('');
+    // const [userData, setUserData] = useState('');
+
+    useEffect(function(){
+        getUserData();
+    }, []);
+
+    async function getUserData() {
+        props.getData()
+    }
+
+    // useEffect(() => {
+    //     setUserData(props.user.data)
+    //     console.log(props.user.data)
+    // }, [props.user])
 
     return (
         <div className="user-block">
@@ -72,58 +71,59 @@ function UserProfile() {
                     <h1>My profile</h1>
                 </div>
 
+                {props.user != 0 ?
                 <div className="user-profile">
-                    <div className="user-profile-left">
-                        <div className="user-avatar">
-                            <img src={authorIcon} alt="User"></img>
-                            <Button className="edit-btn" onClick={openEditor} innerHTML="Edit profile" />
-                        </div>
-                    </div>
-                    <div className="user-profile-right">
-                        <div className="user-info">
-                            <div className="user-name">Name: <span>{data.name}</span></div>
-                            <div className="user-surname">Surname: <span>{data.surname}</span></div>
-                            <div className="user-gender">Gender: <span>{data.gender}</span></div>
-                            <div className="user-birthdate">Birth date: <span>{data.birthdayDate}</span></div>
-                            <hr/>
-                            <div className="user-count">
-                                <div className="friends-count"><NavLink to='/Friends'><span className="count">17</span>friends</NavLink></div>
-                                <div className="friends-count"><a href="#posts"><span className="count">9</span>posts</a></div>
-                                <div className="friends-count"><NavLink to='/Favorites'><span className="count">54</span>favorites</NavLink></div>
-                                <div className="friends-count"><NavLink to='/Bookmarks'><span className="count">3</span>bookmarks</NavLink></div>
-                            </div>
-                        </div>
-
-                        <div className='title-wrapper' id="posts">
-                            <h1>My posts:</h1>
-
-                            <Button onClick={createPost} className="create-post" innerHTML="Create post" />
-
-                            <div className="new-post">
-                                <div className="post-author">
-                                    <img className="author-img" src={authorIcon} alt="User"></img>
-                                    <h3>Sasha Vysotski</h3>
-                                </div>
-                                <div className="post-content">
-                                    <div className="title-name">
-                                        <Input placeholder="Insert title" />
-                                    </div>
-                                    <div className="content">
-                                        <textarea></textarea>
-                                    </div>
-                                </div>
-                                <div className="post-controllers">
-                                    <Button className="confirm-btn" innerHTML="Send new post" />
-                                    <Button className="attach-btn"innerHTML={<><img src={attachBtn} alt="Attach icon"></img><Input type="file" /></>} />
-                                    <Button className="close-btn" onClick={closePost} innerHTML={<img className="close-icon" src={closeIcon} alt="Close icon"></img>} />
-                                </div>
-                            </div>
-                        </div>
-
-                        <PostsList dltBtn={<Button className="close-btn" innerHTML={<img className="close-icon" src={closeIcon} alt="Close-icon"></img>} />} />
-
+                <div className="user-profile-left">
+                    <div className="user-avatar">
+                        <img src={authorIcon} alt="User"></img>
+                        <Button className="edit-btn" onClick={openEditor} innerHTML="Edit profile" />
                     </div>
                 </div>
+                <div className="user-profile-right">
+                    <div className="user-info">
+                        <div className="user-name">Name: <span>{props.user.user.data.name}</span></div>
+                        <div className="user-surname">Surname: <span>{props.user.user.data.surname}</span></div>
+                        <div className="user-gender">Gender: <span>{props.user.user.data.gender}</span></div>
+                        <div className="user-birthdate">Birth date: <span>{props.user.user.data.birthdayDate}</span></div>
+                        <hr/>
+                        <div className="user-count">
+                            <div className="friends-count"><NavLink to='/Friends'><span className="count">17</span>friends</NavLink></div>
+                            <div className="friends-count"><a href="#posts"><span className="count">9</span>posts</a></div>
+                            <div className="friends-count"><NavLink to='/Favorites'><span className="count">54</span>favorites</NavLink></div>
+                            <div className="friends-count"><NavLink to='/Bookmarks'><span className="count">3</span>bookmarks</NavLink></div>
+                        </div>
+                    </div>
+
+                    <div className='title-wrapper' id="posts">
+                        <h1>My posts:</h1>
+
+                        <Button onClick={createPost} className="create-post" innerHTML="Create post" />
+
+                        <div className="new-post">
+                            <div className="post-author">
+                                <img className="author-img" src={authorIcon} alt="User"></img>
+                                <h3>Sasha Vysotski</h3>
+                            </div>
+                            <div className="post-content">
+                                <div className="title-name">
+                                    <Input placeholder="Insert title" />
+                                </div>
+                                <div className="content">
+                                    <textarea></textarea>
+                                </div>
+                            </div>
+                            <div className="post-controllers">
+                                <Button className="confirm-btn" innerHTML="Send new post" />
+                                <Button className="attach-btn"innerHTML={<><img src={attachBtn} alt="Attach icon"></img><Input type="file" /></>} />
+                                <Button className="close-btn" onClick={closePost} innerHTML={<img className="close-icon" src={closeIcon} alt="Close icon"></img>} />
+                            </div>
+                        </div>
+                    </div>
+
+                    <MyPostsList />
+
+                </div>
+            </div> : <div>User is not found</div>}
 
             </main>
             <div className="popup">
@@ -150,4 +150,13 @@ function UserProfile() {
     )
 }
 
-export default UserProfile;
+const mapStateToProps = (state) => ({
+    user: state.user
+})
+  
+const mapDispatchToProps = (dispatch) => ({
+    getData: () => dispatch(getData())
+    // getData: (data) => dispatch(getData(data))
+})
+  
+export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);

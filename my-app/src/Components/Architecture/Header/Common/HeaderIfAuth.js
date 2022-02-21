@@ -10,10 +10,9 @@ import Button from "../../../Common/Button";
 
 async function getData(setData) {
     if (localStorage.getItem('token') !== null) {
-        let userId = JSON.parse(localStorage.getItem('token')).user[2];
         let token = JSON.parse(localStorage.getItem('token')).token;
     
-        await fetch(`https://localhost:7103/User/${userId}`, {
+        await fetch(`https://localhost:7103/User/Profile`, {
             method: 'GET',
             headers: {
                 "Accept": "application/json",
@@ -39,6 +38,8 @@ function HeaderIfAuth(props) {
     useEffect(function(){
         getData(setData);
     }, [props.isLog])
+
+    // console.log(data);
 
     return (
         <div className='auth-block'>
