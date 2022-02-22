@@ -8,12 +8,12 @@ import Input from "../../../Common/Input.js";
 
 import './../../../../css/PageBlock/Profile.css';
 
-// import userAvatar from './../../../../images/15.jpg';
 import authorIcon from './../../../../images/df-user-icon.png';
 import attachBtn from './../../../../images/attachments.png';
 import closeIcon from './../../../../images/close.png';
 
 import { getData } from './../../../../actions/user.action';
+import { getMyPostsData } from './../../../../actions/myPosts.action';
 import {connect} from "react-redux";
 
 
@@ -45,21 +45,18 @@ function closePopup(event) {
 
 
 function UserProfile(props) {
-    // const [data, setData] = useState('');
-    // const [userData, setUserData] = useState('');
 
     useEffect(function(){
         getUserData();
+        getMyPostsData();
     }, []);
 
     async function getUserData() {
         props.getData()
     }
-
-    // useEffect(() => {
-    //     setUserData(props.user.data)
-    //     console.log(props.user.data)
-    // }, [props.user])
+    async function getMyPostsData() {
+        props.getMyPostsData()
+    }
 
     return (
         <div className="user-block">
@@ -155,7 +152,8 @@ const mapStateToProps = (state) => ({
 })
   
 const mapDispatchToProps = (dispatch) => ({
-    getData: () => dispatch(getData())
+    getData: () => dispatch(getData()),
+    getMyPostsData: () => dispatch(getMyPostsData())
     // getData: (data) => dispatch(getData(data))
 })
   

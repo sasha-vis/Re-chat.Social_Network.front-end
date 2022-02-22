@@ -11,6 +11,7 @@ import Button from "../../../../Common/Button";
 import Input from "../../../../Common/Input";
 
 import {connect} from "react-redux";
+import { getData } from './../../../../../actions/posts.action';
 
 function changeLikeBtn(event) {
     let button = event.target;
@@ -46,27 +47,30 @@ function openComments(event) {
     comments.classList.toggle('display-flex');
 }
 
-async function getData(setData) {
-    await fetch(`https://localhost:7103/Post`)
-    .then((response) => {
-    return response.json();
-    })
-    .then((data) => {
-        setData(data);
-    });
-}
+// async function getData(setData) {
+//     await fetch(`https://localhost:7103/Post`)
+//     .then((response) => {
+//     return response.json();
+//     })
+//     .then((data) => {
+//         setData(data);
+//     });
+// }
 
 function PostsList(props) {
-    const [data, setData] = useState([]);
 
     useEffect(function(){
-        getData(setData);
+        getPostsData();
     }, []);
+
+    async function getPostsData() {
+        props.getData()
+    }
 
     return (
         <ul className="posts-list">
-            {data.length !== 0 ?
-                data.map((item, index) => 
+            {props.posts != 0 ?
+                props.posts.posts.data.map((item, index) => 
                     <li className="post" key={index}>
                         <div className="post-author">
                             <img className="author-img" src={authorIcon} alt="User"></img>
@@ -137,11 +141,11 @@ function PostsList(props) {
 }
 
 const mapStateToProps = (state) => ({
-    isLog: state.isLog
+    posts: state.posts
 })
   
-// const mapDispatchToProps = (dispatch) => ({
-//     changeButton: (data) => dispatch(changeButton(data))
-// })
+const mapDispatchToProps = (dispatch) => ({
+    getData: () => dispatch(getData())
+})
   
-export default connect(mapStateToProps)(PostsList);
+export default connect(mapStateToProps, mapDispatchToProps)(PostsList);

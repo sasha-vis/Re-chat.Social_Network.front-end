@@ -8,24 +8,7 @@ import userIcon from './../../../../images/df-user-icon.png';
 
 import Button from "../../../Common/Button";
 
-async function getData(setData) {
-    if (localStorage.getItem('token') !== null) {
-        let token = JSON.parse(localStorage.getItem('token')).token;
-    
-        await fetch(`https://localhost:7103/User/Profile`, {
-            method: 'GET',
-            headers: {
-                "Accept": "application/json",
-                "Authorization": "Bearer " + token
-            }})
-        .then((response) => {
-        return response.json();
-        })
-        .then((data) => {
-            setData(data);
-        });
-    }
-}
+import { getData } from './../../../../actions/user.action';
 
 function exitAccount(props) {
     if(localStorage.getItem('token')) localStorage.removeItem('token');
@@ -33,18 +16,19 @@ function exitAccount(props) {
 }
 
 function HeaderIfAuth(props) {
-    const [data, setData] = useState('');
 
     useEffect(function(){
-        getData(setData);
-    }, [props.isLog])
+        getUserData();
+    }, []);
 
-    // console.log(data);
+    async function getUserData() {
+        props.getData()
+    }
 
     return (
         <div className='auth-block'>
             <img src={userIcon} alt="user icon"></img>
-            <span>{data !== '' ? data.email.split('@')[0] : ''}</span>
+            <span>{props.user != 0 ? props.user.user.data.email.split('@')[0] : ''}</span>
             <Button className='sign-up' innerHTML={<NavLink to="/" onClick={() => exitAccount(props)}><h3 className='sign-up-title'>Exit</h3></NavLink>}></Button>
         </div>
     )
@@ -52,11 +36,12 @@ function HeaderIfAuth(props) {
 
 const mapStateToProps = (state) => ({
     isLog: state.isLog,
-    userProfile: state.userProfile
+    user: state.user
 })
   
 const mapDispatchToProps = (dispatch) => ({
-    changeButton: (data) => dispatch(changeButton(data))
+    changeButton: (data) => dispatch(changeButton(data)),
+    getData: () => dispatch(getData())
 })
   
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderIfAuth);

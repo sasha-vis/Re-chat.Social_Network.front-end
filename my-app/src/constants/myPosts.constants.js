@@ -1,0 +1,1 @@
+export const SET_MYPOSTS = 'SET_MYPOSTS';

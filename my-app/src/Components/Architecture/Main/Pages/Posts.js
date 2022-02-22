@@ -44,7 +44,6 @@ async function sendNewPost(event, data, props, setData) {
 }
 
 function Posts(props){
-
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 

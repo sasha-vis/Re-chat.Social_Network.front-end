@@ -12,6 +12,7 @@ import Button from "../../../../Common/Button";
 import Input from "../../../../Common/Input";
 
 import {connect} from "react-redux";
+import { deletePost } from './../../../../../actions/posts.action';
 
 function changeLikeBtn(event) {
     let button = event.target;
@@ -47,61 +48,17 @@ function openComments(event) {
     comments.classList.toggle('display-flex');
 }
 
-async function getData(setData) {
-    let token = JSON.parse(localStorage.getItem('token')).token;
-    await fetch(`https://localhost:7103/Post/MyPosts`, {
-            method: 'GET',
-            headers: {
-                "Accept": "application/json",
-                "Authorization": "Bearer " + token
-            }})
-    .then((response) => {
-    return response.json();
-    })
-    .then((data) => {
-        setData(data);
-    });
-}
-
-async function deletePost(event, setData) {
-    const itemId = event.target.closest('li').dataset.id;
-    // console.log(event.target)
-
-    let token = JSON.parse(localStorage.getItem('token')).token;
-        
-    await fetch(`https://localhost:7103/Post/${itemId}`, {
-        method: 'DELETE',
-        headers: {
-            "Accept": "application/json",
-            "Authorization": "Bearer " + token
-        }})
-    .then((response) => {
-    return response.json();
-    })
-    .then((data) => {
-        setData(data);
-    });
-
-}
-
 function MyPostsList(props) {
-    const [data, setData] = useState([]);
-
-    useEffect(function(){
-        getData(setData);
-    }, []);
-
-    // console.log(props)
 
     return (
         <ul className="posts-list">
-            {data.length !== 0 ?
-                data.map((item, index) => 
+            {props.myPosts != 0 ?
+                props.myPosts.myPosts.data.map((item, index) => 
                     <li className="post" key={index} data-id={item.id}>
                         <div className="post-author">
                             <img className="author-img" src={authorIcon} alt="User"></img>
                             <h3><span>{item.userName}</span> <span>{item.userSurname}</span></h3>
-                            <Button className="close-btn" onClick={(event) => deletePost(event, setData)} innerHTML={<img className="close-icon" src={closeIcon} alt="Close-icon"></img>} />
+                            <Button className="close-btn" onClick={() => props.deletePost({index: item.id})} innerHTML={<img className="close-icon" src={closeIcon} alt="Close-icon"></img>} />
                         </div>
                         <div className="post-content">
                             <h3>{item.title}</h3>
@@ -167,11 +124,12 @@ function MyPostsList(props) {
 }
 
 const mapStateToProps = (state) => ({
-    isLog: state.isLog
+    isLog: state.isLog,
+    myPosts: state.myPosts
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    deletePost: (data) => dispatch(deletePost(data))
 })
   
-// const mapDispatchToProps = (dispatch) => ({
-//     changeButton: (data) => dispatch(changeButton(data))
-// })
-  
-export default connect(mapStateToProps)(MyPostsList);
+export default connect(mapStateToProps, mapDispatchToProps)(MyPostsList);

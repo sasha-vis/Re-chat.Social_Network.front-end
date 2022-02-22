@@ -5,6 +5,9 @@ import {combineReducers, createStore, applyMiddleware} from "redux";
 // import platformReducer from "../reducers/platform.reducer.js";
 import isLog from "./../reducres/isLog.reducer";
 import user from "./../reducres/user.reducer";
+import posts from "./../reducres/posts.reducer";
+import myPosts from "./../reducres/myPosts.reducer";
+
 import thunk from 'redux-thunk'
 
 export const rootReducer = combineReducers({
@@ -12,7 +15,9 @@ export const rootReducer = combineReducers({
 //   platform: platformReducer,
 //   products: productsReducer,
   isLog: isLog,
-  user: user
+  user: user,
+  posts,
+  myPosts
 })
 
 //export const store = createStore(rootReducer);
