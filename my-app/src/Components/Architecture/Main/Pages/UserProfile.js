@@ -12,13 +12,17 @@ import authorIcon from './../../../../images/df-user-icon.png';
 import attachBtn from './../../../../images/attachments.png';
 import closeIcon from './../../../../images/close.png';
 
-import { getData } from './../../../../actions/user.action';
+import { getUserData } from './../../../../actions/user.action';
 import { getMyPostsData } from './../../../../actions/myPosts.action';
+import { getData } from './../../../../actions/posts.action';
+
+import { createPost } from "../../../../actions/posts.action.js";
+
 import {connect} from "react-redux";
 
 
 
-function createPost(event) {
+function createPostBtn(event) {
     let newPost = event.target.closest('div').children[2];
 
     newPost.classList.toggle('display-block');
@@ -42,7 +46,19 @@ function closePopup(event) {
     closeBtn.classList.remove('display-block');
 }
 
+async function createPostConfirm(data) {
+    let token = JSON.parse(localStorage.getItem('token')).token;
 
+    const response = await fetch('https://localhost:7103/Post', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + token
+        }
+    });
+    console.log(response)
+}
 
 function UserProfile(props) {
 
@@ -52,10 +68,40 @@ function UserProfile(props) {
     }, []);
 
     async function getUserData() {
-        props.getData()
+        props.getUserData()
     }
     async function getMyPostsData() {
         props.getMyPostsData()
+    }
+
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+
+    function handleChangeTitle(event) {
+        setTitle(event.target.value);
+    }
+    
+    function handleChangeContent(event) {
+        setContent(event.target.value);
+    }
+
+    function likedPosts() {
+        let i = 0;
+
+        let userId = JSON.parse(localStorage.getItem('user')).data.id;
+        if (props.posts != 0) {
+            let posts = props.posts.posts.data;
+    
+            posts.forEach(function(item, index) {
+                item.likes.forEach(function(item2, index2) {
+                    if (userId === item2.userId) i++;
+                })
+            })
+        }
+
+        props.getPostsData();
+
+        return i;
     }
 
     return (
@@ -68,7 +114,7 @@ function UserProfile(props) {
                     <h1>My profile</h1>
                 </div>
 
-                {props.user != 0 ?
+                {(props.user != 0 && props.myPosts != 0) ?
                 <div className="user-profile">
                 <div className="user-profile-left">
                     <div className="user-avatar">
@@ -84,33 +130,34 @@ function UserProfile(props) {
                         <div className="user-birthdate">Birth date: <span>{props.user.user.data.birthdayDate}</span></div>
                         <hr/>
                         <div className="user-count">
-                            <div className="friends-count"><NavLink to='/Friends'><span className="count">17</span>friends</NavLink></div>
-                            <div className="friends-count"><a href="#posts"><span className="count">9</span>posts</a></div>
-                            <div className="friends-count"><NavLink to='/Favorites'><span className="count">54</span>favorites</NavLink></div>
-                            <div className="friends-count"><NavLink to='/Bookmarks'><span className="count">3</span>bookmarks</NavLink></div>
+                            <div className="friends-count"><NavLink to='/Friends'><span className="count"></span>friends</NavLink></div>
+                            <div className="friends-count"><a href="#posts"><span className="count">{props.myPosts.myPosts.data.length}</span>posts</a></div>
+                            <div className="friends-count"><NavLink to='/Favorites'><span className="count">{likedPosts()}</span>favorites</NavLink></div>
+                            <div className="friends-count"><NavLink to='/Bookmarks'><span className="count"></span>bookmarks</NavLink></div>
                         </div>
                     </div>
 
                     <div className='title-wrapper' id="posts">
                         <h1>My posts:</h1>
 
-                        <Button onClick={createPost} className="create-post" innerHTML="Create post" />
+                        <Button onClick={createPostBtn} className="create-post" innerHTML="Create post" />
 
                         <div className="new-post">
                             <div className="post-author">
                                 <img className="author-img" src={authorIcon} alt="User"></img>
-                                <h3>Sasha Vysotski</h3>
+                                <h3>{props.user.user.data.name} {props.user.user.data.surname}</h3>
                             </div>
                             <div className="post-content">
                                 <div className="title-name">
-                                    <Input placeholder="Insert title" />
+                                    <Input type={"text"} value={title} func={handleChangeTitle} placeholder="Insert title" />
                                 </div>
                                 <div className="content">
-                                    <textarea></textarea>
+                                    <textarea type="text" value={content} onChange={handleChangeContent}></textarea>
                                 </div>
                             </div>
                             <div className="post-controllers">
-                                <Button className="confirm-btn" innerHTML="Send new post" />
+                                <Button className="confirm-btn" onClick={() => props.createPost({"title": title, "content": content})} innerHTML="Send new post" />
+                                {/* <Button className="confirm-btn" onClick={() => createPostConfirm({title: title, content: content})} innerHTML="Send new post" /> */}
                                 <Button className="attach-btn"innerHTML={<><img src={attachBtn} alt="Attach icon"></img><Input type="file" /></>} />
                                 <Button className="close-btn" onClick={closePost} innerHTML={<img className="close-icon" src={closeIcon} alt="Close icon"></img>} />
                             </div>
@@ -120,7 +167,9 @@ function UserProfile(props) {
                     <MyPostsList />
 
                 </div>
-            </div> : <div>User is not found</div>}
+            </div> 
+            : 
+            <div>User is not found</div>}
 
             </main>
             <div className="popup">
@@ -148,13 +197,16 @@ function UserProfile(props) {
 }
 
 const mapStateToProps = (state) => ({
-    user: state.user
+    user: state.user,
+    myPosts: state.myPosts,
+    posts: state.posts
 })
   
 const mapDispatchToProps = (dispatch) => ({
-    getData: () => dispatch(getData()),
-    getMyPostsData: () => dispatch(getMyPostsData())
-    // getData: (data) => dispatch(getData(data))
+    getUserData: () => dispatch(getData()),
+    getMyPostsData: () => dispatch(getMyPostsData()),
+    createPost: (data) => dispatch(createPost(data)),
+    getPostsData: (data) => dispatch(getData(data))
 })
   
 export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);

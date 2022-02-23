@@ -1,5 +1,6 @@
 import { SET_POSTS } from './../constants/posts.constants';
 import { DELETE_POST } from './../constants/posts.constants';
+import { CREATE_POST } from './../constants/posts.constants';
 
 
 let defaultData = [];
@@ -13,6 +14,12 @@ let result = (state = defaultData, action) => {
                 posts: action.data
             });
         case DELETE_POST:
+            return ({
+                ...state,
+                posts: action.data
+            })
+        case CREATE_POST:
+            console.log(action.data)
             return ({
                 ...state,
                 posts: action.data

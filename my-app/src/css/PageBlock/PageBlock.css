@@ -124,16 +124,17 @@
     margin-top: 30px;
 }
 
-/* .post-controllers div {
-    width: 25px;
-    height: 25px;
-} */
+.post-controllers > div {
+    display: flex;
+    align-items: center;
+}
 
-.post-controllers button:not(:last-child) {
+.post-controllers > div:not(:last-child) {
     margin-right: 30px;
 }
 
 .post-controllers button {
+    margin-right: 10px;
     width: 25px;
     height: 25px;
     display: flex;
@@ -213,6 +214,7 @@
 }
 
 .comments-list {
+    width: calc(100% - 44px);
     padding: 20px;
     border: 2px solid #000;
     margin: 30px 0 30px 0;

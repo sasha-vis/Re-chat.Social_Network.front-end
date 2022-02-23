@@ -8,7 +8,7 @@ import userIcon from './../../../../images/df-user-icon.png';
 
 import Button from "../../../Common/Button";
 
-import { getData } from './../../../../actions/user.action';
+import { getUserData } from './../../../../actions/user.action';
 
 function exitAccount(props) {
     if(localStorage.getItem('token')) localStorage.removeItem('token');
@@ -22,7 +22,7 @@ function HeaderIfAuth(props) {
     }, []);
 
     async function getUserData() {
-        props.getData()
+        props.getUserData()
     }
 
     return (
@@ -41,7 +41,7 @@ const mapStateToProps = (state) => ({
   
 const mapDispatchToProps = (dispatch) => ({
     changeButton: (data) => dispatch(changeButton(data)),
-    getData: () => dispatch(getData())
+    getUserData: () => dispatch(getUserData())
 })
   
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderIfAuth);

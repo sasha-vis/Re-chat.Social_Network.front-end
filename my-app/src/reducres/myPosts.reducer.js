@@ -6,7 +6,6 @@ let defaultData = [];
 let result = (state = defaultData, action) => {
   switch (action.type) {
       case SET_MYPOSTS:
-        console.log(action.data)
         return ({
             ...state,
             myPosts: action.data

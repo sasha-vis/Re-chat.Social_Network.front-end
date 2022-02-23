@@ -12,7 +12,9 @@ import attachBtn from './../../../../images/attachments.png';
 import closeIcon from './../../../../images/close.png';
 import { setData } from "../../../../actions/user.action.js";
 
-function createPost(event) {
+import { createPost2 } from "../../../../actions/posts.action.js";
+
+function createPostBtn(event) {
     let newPost = event.target.closest('div').children[2];
 
     newPost.classList.toggle('display-block');
@@ -64,7 +66,7 @@ function Posts(props){
                 <div className='title-wrapper'>
                     <h1>Posts line</h1>
 
-                    {props.isLog.isLog !== true ? <h3>If you want to create any post, you need to be authorized</h3> : <button onClick={createPost} className="create-post">Create post</button>}
+                    {props.isLog.isLog !== true ? <h3>If you want to create any post, you need to be authorized</h3> : <button onClick={createPostBtn} className="create-post">Create post</button>}
                     
                     <div className="new-post">
                         <div className="post-author">
@@ -80,7 +82,7 @@ function Posts(props){
                             </div>
                         </div>
                         <div className="post-controllers">
-                            <Button onClick={() => sendNewPost({"title": title, "content": content}, props, setData)} className="confirm-btn" innerHTML="Send new post" />
+                            <Button onClick={() => props.createPost({"title": title, "content": content})} className="confirm-btn" innerHTML="Send new post" />
                             <Button className="attach-btn" innerHTML={<><img src={attachBtn} alt="Attach icon"></img><Input type="file" /></>} />
                             <Button className="close-btn" onClick={closePost} innerHTML={<img className="close-icon" src={closeIcon} alt="Close icon"></img>} />
                         </div>
@@ -98,4 +100,8 @@ const mapStateToProps = (state) => ({
     isLog: state.isLog
 })
 
-export default connect(mapStateToProps)(Posts);
+const mapDispatchToProps = (dispatch) => ({
+    createPost: (data) => dispatch(createPost2(data))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Posts);

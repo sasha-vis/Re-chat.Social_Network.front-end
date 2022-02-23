@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 import {connect} from "react-redux";
 import { changeButton } from './../../../../actions/isLog.action';
-import { getData } from './../../../../actions/user.action';
+import { getUserData } from './../../../../actions/user.action';
 
 import NavForAuth from './../Nav/Common/NavForAuth.js';
 import Button from "../../../Common/Button";
@@ -25,7 +25,7 @@ async function login(data, props) {
     if (json.token) {
         localStorage.setItem("token", JSON.stringify(json));
         props.changeButton();
-        props.getData();
+        props.getUserData();
     } else {
         console.error('Ошибка:');
     }
@@ -75,7 +75,7 @@ const mapStateToProps = (state) => ({
   
 const mapDispatchToProps = (dispatch) => ({
     changeButton: (data) => dispatch(changeButton(data)),
-    getData: () => dispatch(getData())
+    getUserData: () => dispatch(getUserData())
 })
   
 export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
