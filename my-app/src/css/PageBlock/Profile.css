@@ -58,6 +58,14 @@
     width: 50%;
 }
 
+.user-info .registration-date {
+    font-size: 14px;
+    color: #3c3c3c;
+    opacity: 0.7;
+    font-weight: 100;
+    margin-top: 10px;
+}
+
 .user-info hr {
     margin: 10px 0;
 }

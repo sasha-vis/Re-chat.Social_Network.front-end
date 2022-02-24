@@ -46,25 +46,25 @@ function closePopup(event) {
     closeBtn.classList.remove('display-block');
 }
 
-async function createPostConfirm(data) {
-    let token = JSON.parse(localStorage.getItem('token')).token;
-
-    const response = await fetch('https://localhost:7103/Post', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-        }
-    });
-    console.log(response)
+async function createPostConfirm(data, setTitle, setContent, props, event) {
+    props.createPost(data)
+    setTitle('');
+    setContent('');
+    closePost(event)
 }
 
 function UserProfile(props) {
 
+    // const [count, setCount] = useState(0);
+
+    // useEffect(() => {
+    //     likedPosts();
+    // }, [props.posts])
+
     useEffect(function(){
         getUserData();
         getMyPostsData();
+        getPostsData();
     }, []);
 
     async function getUserData() {
@@ -72,6 +72,9 @@ function UserProfile(props) {
     }
     async function getMyPostsData() {
         props.getMyPostsData()
+    }
+    async function getPostsData() {
+        props.getPostsData()
     }
 
     const [title, setTitle] = useState('');
@@ -85,24 +88,25 @@ function UserProfile(props) {
         setContent(event.target.value);
     }
 
-    function likedPosts() {
-        let i = 0;
+    // function likedPosts() {
+    //     let i = 0;
 
-        let userId = JSON.parse(localStorage.getItem('user')).data.id;
-        if (props.posts != 0) {
-            let posts = props.posts.posts.data;
+    //     let userId = JSON.parse(localStorage.getItem('user')).data.id;
+    //     if (props.posts != 0) {
+    //         let posts = props.posts.posts.data;
     
-            posts.forEach(function(item, index) {
-                item.likes.forEach(function(item2, index2) {
-                    if (userId === item2.userId) i++;
-                })
-            })
-        }
+    //         posts.forEach(function(item, index) {
+    //             item.likes.forEach(function(item2, index2) {
+    //                 if (userId === item2.userId) i++;
+    //             })
+    //         })
+    //     }
+    //     console.log('hi')
 
-        props.getPostsData();
+    //     getPostsData();
 
-        return i;
-    }
+    //     setCount(i);
+    // }
 
     return (
         <div className="user-block">
@@ -128,11 +132,12 @@ function UserProfile(props) {
                         <div className="user-surname">Surname: <span>{props.user.user.data.surname}</span></div>
                         <div className="user-gender">Gender: <span>{props.user.user.data.gender}</span></div>
                         <div className="user-birthdate">Birth date: <span>{props.user.user.data.birthdayDate}</span></div>
+                        <div className="registration-date">Registration date: <span>{props.user.user.data.registrationDate}</span></div>
                         <hr/>
                         <div className="user-count">
                             <div className="friends-count"><NavLink to='/Friends'><span className="count"></span>friends</NavLink></div>
                             <div className="friends-count"><a href="#posts"><span className="count">{props.myPosts.myPosts.data.length}</span>posts</a></div>
-                            <div className="friends-count"><NavLink to='/Favorites'><span className="count">{likedPosts()}</span>favorites</NavLink></div>
+                            <div className="friends-count"><NavLink to='/Favorites'><span className="count">{props.user.user.data.countLikes}</span>favorites</NavLink></div>
                             <div className="friends-count"><NavLink to='/Bookmarks'><span className="count"></span>bookmarks</NavLink></div>
                         </div>
                     </div>
@@ -156,7 +161,7 @@ function UserProfile(props) {
                                 </div>
                             </div>
                             <div className="post-controllers">
-                                <Button className="confirm-btn" onClick={() => props.createPost({"title": title, "content": content})} innerHTML="Send new post" />
+                                <Button className="confirm-btn" onClick={(event) => createPostConfirm({"title": title, "content": content}, setTitle, setContent, props, event)} innerHTML="Send new post" />
                                 {/* <Button className="confirm-btn" onClick={() => createPostConfirm({title: title, content: content})} innerHTML="Send new post" /> */}
                                 <Button className="attach-btn"innerHTML={<><img src={attachBtn} alt="Attach icon"></img><Input type="file" /></>} />
                                 <Button className="close-btn" onClick={closePost} innerHTML={<img className="close-icon" src={closeIcon} alt="Close icon"></img>} />

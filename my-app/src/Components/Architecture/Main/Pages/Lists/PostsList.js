@@ -12,6 +12,7 @@ import Input from "../../../../Common/Input";
 
 import {connect} from "react-redux";
 import { getData } from './../../../../../actions/posts.action';
+import { getUserData } from "../../../../../actions/user.action";
 
 
 
@@ -56,6 +57,9 @@ function PostsList(props) {
     async function getPostsData() {
         props.getData()
     }
+    async function getUserData() {
+        props.getUserData()
+    }
 
     async function changeLikeBtn(data) {
         let token = JSON.parse(localStorage.getItem('token')).token;
@@ -68,6 +72,7 @@ function PostsList(props) {
             }
         })
         getPostsData();
+        getUserData();
     }
 
     function setPhoto(item) {
@@ -79,21 +84,38 @@ function PostsList(props) {
                     let userId = JSON.parse(localStorage.getItem('user')).data.id;
     
                     if (likeUserId === userId) {
-                        console.log(true)
                         result = likedIcon
                     } else {
-                        console.log(false)
                         result = likeIcon
                     }
                 })
             } else {
-                console.log(false)
                 result = likeIcon
             }
         } else {
             result = likeIcon
         }
         return result;
+    }
+
+    const [commentText, setCommentText] = useState('');
+
+    function handleChangeComment(event) {
+        setCommentText(event.target.value);
+    }
+
+    async function sendNewComment(data) {
+        let token = JSON.parse(localStorage.getItem('token')).token;
+        const response = await fetch("https://localhost:7103/Comment", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        })
+        getPostsData();
+        setCommentText('');
     }
 
     return (
@@ -111,16 +133,21 @@ function PostsList(props) {
                             <p>{item.content}</p>
                         </div>
                         <div className="post-controllers">
-                            <div className="like-wrapper">
-                                <Button onClick={() => changeLikeBtn({"postId": item.id})} innerHTML={<img className="like-icon" src={setPhoto(item)} alt="Like icon"></img>} />
-                                <span>{item.likes.length}</span>
-                            </div>
-                            <div className="comment-wrapper">
-                                <Button onClick={openComments} innerHTML={<img className="comment-icon" src={commentIcon} alt="Comment icon"></img>} />
-                                <span>{item.comments.length}</span>
-                            </div>
                             <div>
-                                <Button onClick={changeBookmarkBtn} innerHTML={<img className="bookmark-icon" src={bookmarkIcon} alt="Bookmark icon"></img>} />
+                                <div className="like-wrapper">
+                                    <Button onClick={() => changeLikeBtn({"postId": item.id})} innerHTML={<img className="like-icon" src={setPhoto(item)} alt="Like icon"></img>} />
+                                    <span>{item.likes.length}</span>
+                                </div>
+                                <div className="comment-wrapper">
+                                    <Button onClick={openComments} innerHTML={<img className="comment-icon" src={commentIcon} alt="Comment icon"></img>} />
+                                    <span>{item.comments.length}</span>
+                                </div>
+                                <div>
+                                    <Button onClick={changeBookmarkBtn} innerHTML={<img className="bookmark-icon" src={bookmarkIcon} alt="Bookmark icon"></img>} />
+                                </div>
+                            </div>
+                            <div className="date-post">
+                                {`${item.postDate.substr(0, 10)}  ${item.postDate.substr(11, 5)}`}
                             </div>
                         </div>
                         <div className="comments">
@@ -133,12 +160,13 @@ function PostsList(props) {
                                         <span>{commentItem.userName} {commentItem.userSurname}</span>
                                     </div>
                                     <div className="comment-content">{commentItem.commentText}</div>
+                                    <div className="comment-date">{`${commentItem.commentDate.substr(0, 10)}  ${commentItem.commentDate.substr(11, 5)}`}</div>
                                 </li>
                             ) : <li>There is no any comment</li>}
                             </ul>
                             <div className="comments-controllers">
-                                <Input placeholder="Insert comment" />
-                                <Button innerHTML="Send" />
+                                <Input type={"text"} value={commentText} func={handleChangeComment} placeholder="Insert comment" />
+                                <Button onClick={() => sendNewComment({"postId": item.id, "commentText": commentText})} innerHTML="Send" />
                             </div>
                         </div>
                     </li>
@@ -153,6 +181,7 @@ const mapStateToProps = (state) => ({
 })
   
 const mapDispatchToProps = (dispatch) => ({
+    getUserData: () => dispatch(getUserData()),
     getData: () => dispatch(getData())
 })
   
