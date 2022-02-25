@@ -6,13 +6,14 @@ import commentIcon from './../../../../../images/comment-icon.png';
 import bookmarkIcon from './../../../../../images/bookmark-icon.png';
 import bookmarkedIcon from './../../../../../images/bookmark-slctd-icon.png';
 import authorIcon from './../../../../../images/df-user-icon.png';
+import closeIcon from './../../../../../images/close.png';
 
 import Button from "../../../../Common/Button";
 import Input from "../../../../Common/Input";
 import ErrorMessage from "../../../../Common/ErrorMessage";
 
 import {connect} from "react-redux";
-import { getData } from './../../../../../actions/posts.action';
+import { getData, getFavoritePosts } from './../../../../../actions/posts.action';
 import { getUserData } from "../../../../../actions/user.action";
 
 
@@ -50,14 +51,13 @@ function openComments(event, setCommentText, setCommentErrorForNewPost) {
 //     });
 // }
 
-function PostsList(props) {
+function FavoritesPostsList(props) {
 
     const [commentErrorForNewPost, setCommentErrorForNewPost] = useState('');
 
-    const [userId, setUserId] = useState('');
-
     useEffect(function(){
         getPostsData();
+        getFavoritePosts()
     }, []);
 
     async function getPostsData() {
@@ -65,6 +65,10 @@ function PostsList(props) {
     }
     async function getUserData() {
         props.getUserData()
+    }
+
+    async function getFavoritePosts(){
+        props.getFavoritePosts()
     }
 
     async function changeLikeBtn(data) {
@@ -78,20 +82,7 @@ function PostsList(props) {
             }
         })
         getPostsData();
-        getUserData();
-    }
-
-    async function changeBookmarkBtn(data) {
-        let token = JSON.parse(localStorage.getItem('token')).token;
-        const response = await fetch("https://localhost:7103/Bookmark", {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token
-            }
-        })
-        getPostsData();
+        getFavoritePosts();
         getUserData();
     }
 
@@ -118,29 +109,6 @@ function PostsList(props) {
         return result;
     }
 
-    function setBookmarkPhoto(item) {
-        let result;
-        if(localStorage.getItem('user')) {
-            if (item.bookmarks.length != 0) {
-                item.bookmarks.forEach(function(itemBookmark, index) {
-                    let bookmarkUserId = itemBookmark.userId;
-                    let userId = JSON.parse(localStorage.getItem('user')).data.id;
-    
-                    if (bookmarkUserId === userId) {
-                        result = bookmarkedIcon
-                    } else {
-                        result = bookmarkIcon
-                    }
-                })
-            } else {
-                result = bookmarkIcon
-            }
-        } else {
-            result = bookmarkIcon
-        }
-        return result;
-    }
-
     const [commentText, setCommentText] = useState('');
 
     function handleChangeComment(event) {
@@ -159,6 +127,7 @@ function PostsList(props) {
                 }
             })
             getPostsData();
+            getFavoritePosts();
             setCommentText('');
             setCommentErrorForNewPost('')
         } else {
@@ -171,13 +140,13 @@ function PostsList(props) {
 
     return (
         <ul className="posts-list">
-            {props.posts != 0 ?
-                props.posts.posts.data.map((item, index) => 
+            {props.favoritePosts != 0 ?
+                props.favoritePosts.favoritePosts.data.map((item, index) => 
                     <li className="post" key={index}>
                         <div className="post-author">
                             <img className="author-img" src={authorIcon} alt="User"></img>
                             <h3><span>{item.userName}</span> <span>{item.userSurname}</span></h3>
-                            {props.dltBtn}
+                            <Button className="close-btn" onClick={() => changeLikeBtn({"postId": item.id})} innerHTML={<img className="close-icon" src={closeIcon} alt="Close-icon"></img>} />
                         </div>
                         <div className="post-content">
                             <h3>{item.title}</h3>
@@ -194,7 +163,7 @@ function PostsList(props) {
                                     <span>{item.comments.length}</span>
                                 </div>
                                 <div>
-                                    <Button onClick={() => changeBookmarkBtn({"postId": item.id})} innerHTML={<img className="bookmark-icon" src={setBookmarkPhoto(item)} alt="Bookmark icon"></img>} />
+                                    <Button onClick={changeBookmarkBtn} innerHTML={<img className="bookmark-icon" src={bookmarkIcon} alt="Bookmark icon"></img>} />
                                 </div>
                             </div>
                             <div className="date-post">
@@ -203,8 +172,8 @@ function PostsList(props) {
                         </div>
                         <div className="comments">
                             <ul className="comments-list">
-                            {props.posts.posts.data[index].comments.length != 0 ?
-                                props.posts.posts.data[index].comments.map((commentItem, commentIndex) =>
+                            {props.favoritePosts.favoritePosts.data[index].comments.length != 0 ?
+                                props.favoritePosts.favoritePosts.data[index].comments.map((commentItem, commentIndex) =>
                                 <li key={commentItem.id}>
                                     <div className="comment-author">
                                         <img className="comment-img" src={authorIcon} alt="User"></img>
@@ -229,12 +198,14 @@ function PostsList(props) {
 
 const mapStateToProps = (state) => ({
     user: state.user,
-    posts: state.posts
+    posts: state.posts,
+    favoritePosts: state.favoritePosts
 })
   
 const mapDispatchToProps = (dispatch) => ({
     getUserData: () => dispatch(getUserData()),
-    getData: () => dispatch(getData())
+    getData: () => dispatch(getData()),
+    getFavoritePosts: () => dispatch(getFavoritePosts())
 })
   
-export default connect(mapStateToProps, mapDispatchToProps)(PostsList);
+export default connect(mapStateToProps, mapDispatchToProps)(FavoritesPostsList);

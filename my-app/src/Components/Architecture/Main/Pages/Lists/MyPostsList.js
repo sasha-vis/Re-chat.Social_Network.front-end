@@ -15,6 +15,7 @@ import {connect} from "react-redux";
 import { deletePost } from './../../../../../actions/posts.action';
 import { getMyPostsData } from "../../../../../actions/myPosts.action";
 import { getUserData } from "../../../../../actions/user.action";
+import ErrorMessage from "../../../../Common/ErrorMessage";
 
 function changeLikeBtn(event) {
     let button = event.target;
@@ -44,13 +45,18 @@ function changeBookmarkBtn(event) {
     }
 }
 
-function openComments(event) {
+function openComments(event, setCommentText, setCommentErrorForNewPost, currentIndex) {
+    setCommentText('');
+    setCommentErrorForNewPost('');
+
     let comments = event.target.closest('li').children[3];
 
     comments.classList.toggle('display-flex');
 }
 
 function MyPostsList(props) {
+
+    const [commentErrorForNewPost, setCommentErrorForNewPost] = useState('');
 
     useEffect(function(){
         getMyPostsData();
@@ -61,6 +67,9 @@ function MyPostsList(props) {
     }
     async function getUserData() {
         props.getUserData()
+    }
+    async function getBookmarkPosts() {
+        props.getBookmarkPosts()
     }
 
     async function changeLikeBtn(data) {
@@ -73,6 +82,35 @@ function MyPostsList(props) {
                 "Authorization": "Bearer " + token
             }
         })
+        getMyPostsData();
+        getUserData();
+    }
+
+    async function changeBookmarkBtn(data) {
+        let token = JSON.parse(localStorage.getItem('token')).token;
+        const response = await fetch("https://localhost:7103/Bookmark", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        })
+        getMyPostsData();
+        getUserData();
+    }
+
+    async function deleteBtn(dataItem) {
+        let token = JSON.parse(localStorage.getItem('token')).token;
+    
+        let data = await fetch(`https://localhost:7103/Post/${dataItem.index}`, {
+            method: 'DELETE',
+            headers: {
+                "Accept": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        });
+
         getMyPostsData();
         getUserData();
     }
@@ -96,35 +134,66 @@ function MyPostsList(props) {
         return result;
     }
 
+    function setBookmarkPhoto(item) {
+        let result;
+        if(localStorage.getItem('user')) {
+            if (item.bookmarks.length != 0) {
+                item.bookmarks.forEach(function(itemBookmark, index) {
+                    let bookmarkUserId = itemBookmark.userId;
+                    let userId = JSON.parse(localStorage.getItem('user')).data.id;
+    
+                    if (bookmarkUserId === userId) {
+                        result = bookmarkedIcon
+                    } else {
+                        result = bookmarkIcon
+                    }
+                })
+            } else {
+                result = bookmarkIcon
+            }
+        } else {
+            result = bookmarkIcon
+        }
+        return result;
+    }
+
     const [commentText, setCommentText] = useState('');
 
     function handleChangeComment(event) {
         setCommentText(event.target.value);
     }
 
-    async function sendNewComment(data) {
-        let token = JSON.parse(localStorage.getItem('token')).token;
-        const response = await fetch("https://localhost:7103/Comment", {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token
-            }
-        })
-        getMyPostsData();
-        setCommentText('');
+    async function sendNewComment(data, event) {
+        if(commentText.trim() != '') {
+            let token = JSON.parse(localStorage.getItem('token')).token;
+            const response = await fetch("https://localhost:7103/Comment", {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                }
+            })
+            getMyPostsData();
+            setCommentText('');
+            setCommentErrorForNewPost('')
+        } else {
+            setCommentErrorForNewPost('The comment is empty')
+
+            let input = event.target.closest('.comments-controllers').children[1];
+            input.focus();
+        }
     }
 
     return (
         <ul className="posts-list">
             {props.myPosts != 0 ?
                 props.myPosts.myPosts.data.map((item, index) => 
-                    <li className="post" key={index} data-id={item.id}>
+                    <li className="post" key={index} data-id={index}>
                         <div className="post-author">
                             <img className="author-img" src={authorIcon} alt="User"></img>
                             <h3><span>{item.userName}</span> <span>{item.userSurname}</span></h3>
-                            <Button className="close-btn" onClick={() => props.deletePost({index: item.id})} innerHTML={<img className="close-icon" src={closeIcon} alt="Close-icon"></img>} />
+                            <Button className="close-btn" onClick={() => deleteBtn({index: item.id})} innerHTML={<img className="close-icon" src={closeIcon} alt="Close-icon"></img>} />
                         </div>
                         <div className="post-content">
                             <h3>{item.title}</h3>
@@ -137,23 +206,22 @@ function MyPostsList(props) {
                                     <span>{item.likes.length}</span>
                                 </div>
                                 <div className="comment-wrapper">
-                                    <Button onClick={openComments} innerHTML={<img className="comment-icon" src={commentIcon} alt="Comment icon"></img>} />
+                                    <Button onClick={(event) => openComments(event, setCommentText, setCommentErrorForNewPost, index)} innerHTML={<img className="comment-icon" src={commentIcon} alt="Comment icon"></img>} />
                                     <span>{item.comments.length}</span>
                                 </div>
                                 <div>
-                                    <Button onClick={changeBookmarkBtn} innerHTML={<img className="bookmark-icon" src={bookmarkIcon} alt="Bookmark icon"></img>} />
+                                    <Button onClick={() => changeBookmarkBtn({"postId": item.id})} innerHTML={<img className="bookmark-icon" src={setBookmarkPhoto(item)} alt="Bookmark icon"></img>} />
                                 </div>
                             </div>
                             <div className="date-post">
                                 {`${item.postDate.substr(0, 10)}  ${item.postDate.substr(11, 5)}`}
                             </div>
                         </div>
-                        <div className="comments">
+                        <div className="comments" data-id={index}>
                             <ul className="comments-list">
                             {props.myPosts.myPosts.data[index].comments.length != 0 ?
                                 props.myPosts.myPosts.data[index].comments.map((commentItem, commentIndex) =>
-                                <li key={commentItem.id}>
-                                    {console.log(commentItem)}
+                                <li key={commentItem.id} data-id={index}>
                                     <div className="comment-author">
                                         <img className="comment-img" src={authorIcon} alt="User"></img>
                                         <span>{commentItem.userName} {commentItem.userSurname}</span>
@@ -164,8 +232,9 @@ function MyPostsList(props) {
                             ) : <li>There is no any comment</li>}
                             </ul>
                             <div className="comments-controllers">
+                                <ErrorMessage innerHTML={commentErrorForNewPost} />
                                 <Input type={"text"} value={commentText} func={handleChangeComment} placeholder="Insert comment" />
-                                <Button onClick={() => sendNewComment({"postId": item.id, "commentText": commentText})} innerHTML="Send" />
+                                <Button onClick={(event) => sendNewComment({"postId": item.id, "commentText": commentText}, event)} innerHTML="Send" />
                             </div>
                         </div>
                     </li>

@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import HeaderIfNotAuth from "./Common/HeaderIfNotAuth.js";
 import HeaderIfAuth from "./Common/HeaderIfAuth.js";
 
-import logo from './../../../images/logo.png';
+import logo from './../../../images/logo2.png';
 import './../../../css/Header/Header.css';
 
 function Header(props) {

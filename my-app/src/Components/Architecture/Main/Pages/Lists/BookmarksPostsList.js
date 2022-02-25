@@ -6,30 +6,31 @@ import commentIcon from './../../../../../images/comment-icon.png';
 import bookmarkIcon from './../../../../../images/bookmark-icon.png';
 import bookmarkedIcon from './../../../../../images/bookmark-slctd-icon.png';
 import authorIcon from './../../../../../images/df-user-icon.png';
+import closeIcon from './../../../../../images/close.png';
 
 import Button from "../../../../Common/Button";
 import Input from "../../../../Common/Input";
 import ErrorMessage from "../../../../Common/ErrorMessage";
 
 import {connect} from "react-redux";
-import { getData } from './../../../../../actions/posts.action';
+import { getData, getFavoritePosts, getBookmarkPosts } from './../../../../../actions/posts.action';
 import { getUserData } from "../../../../../actions/user.action";
 
 
 
-function changeBookmarkBtn(event) {
-    let button = event.target;
+// function changeBookmarkBtn(event) {
+//     let button = event.target;
 
-    let from = button.src.search('/static'); 
-    var to = button.src.length;
-    let buttonSrc = button.src.substring(from,to);
+//     let from = button.src.search('/static'); 
+//     var to = button.src.length;
+//     let buttonSrc = button.src.substring(from,to);
 
-    if (buttonSrc === bookmarkIcon) {
-        button.src = bookmarkedIcon;
-    } else {
-        button.src = bookmarkIcon;
-    }
-}
+//     if (buttonSrc === bookmarkIcon) {
+//         button.src = bookmarkedIcon;
+//     } else {
+//         button.src = bookmarkIcon;
+//     }
+// }
 
 function openComments(event, setCommentText, setCommentErrorForNewPost) {
     setCommentText('');
@@ -50,14 +51,13 @@ function openComments(event, setCommentText, setCommentErrorForNewPost) {
 //     });
 // }
 
-function PostsList(props) {
+function BookmarkPostsList(props) {
 
     const [commentErrorForNewPost, setCommentErrorForNewPost] = useState('');
 
-    const [userId, setUserId] = useState('');
-
     useEffect(function(){
         getPostsData();
+        getBookmarkPosts()
     }, []);
 
     async function getPostsData() {
@@ -65,6 +65,10 @@ function PostsList(props) {
     }
     async function getUserData() {
         props.getUserData()
+    }
+
+    async function getBookmarkPosts(){
+        props.getBookmarkPosts()
     }
 
     async function changeLikeBtn(data) {
@@ -78,6 +82,7 @@ function PostsList(props) {
             }
         })
         getPostsData();
+        getFavoritePosts();
         getUserData();
     }
 
@@ -92,6 +97,7 @@ function PostsList(props) {
             }
         })
         getPostsData();
+        getBookmarkPosts();
         getUserData();
     }
 
@@ -117,7 +123,6 @@ function PostsList(props) {
         }
         return result;
     }
-
     function setBookmarkPhoto(item) {
         let result;
         if(localStorage.getItem('user')) {
@@ -159,6 +164,7 @@ function PostsList(props) {
                 }
             })
             getPostsData();
+            getBookmarkPosts();
             setCommentText('');
             setCommentErrorForNewPost('')
         } else {
@@ -171,13 +177,13 @@ function PostsList(props) {
 
     return (
         <ul className="posts-list">
-            {props.posts != 0 ?
-                props.posts.posts.data.map((item, index) => 
+            {props.bookmarkPosts != 0 ?
+                props.bookmarkPosts.bookmarkPosts.data.map((item, index) => 
                     <li className="post" key={index}>
                         <div className="post-author">
                             <img className="author-img" src={authorIcon} alt="User"></img>
                             <h3><span>{item.userName}</span> <span>{item.userSurname}</span></h3>
-                            {props.dltBtn}
+                            <Button className="close-btn" onClick={() => changeBookmarkBtn({"postId": item.id})} innerHTML={<img className="close-icon" src={closeIcon} alt="Close-icon"></img>} />
                         </div>
                         <div className="post-content">
                             <h3>{item.title}</h3>
@@ -203,8 +209,8 @@ function PostsList(props) {
                         </div>
                         <div className="comments">
                             <ul className="comments-list">
-                            {props.posts.posts.data[index].comments.length != 0 ?
-                                props.posts.posts.data[index].comments.map((commentItem, commentIndex) =>
+                            {props.bookmarkPosts.bookmarkPosts.data[index].comments.length != 0 ?
+                                props.bookmarkPosts.bookmarkPosts.data[index].comments.map((commentItem, commentIndex) =>
                                 <li key={commentItem.id}>
                                     <div className="comment-author">
                                         <img className="comment-img" src={authorIcon} alt="User"></img>
@@ -229,12 +235,14 @@ function PostsList(props) {
 
 const mapStateToProps = (state) => ({
     user: state.user,
-    posts: state.posts
+    posts: state.posts,
+    bookmarkPosts: state.bookmarkPosts
 })
   
 const mapDispatchToProps = (dispatch) => ({
     getUserData: () => dispatch(getUserData()),
-    getData: () => dispatch(getData())
+    getData: () => dispatch(getData()),
+    getBookmarkPosts: () => dispatch(getBookmarkPosts())
 })
   
-export default connect(mapStateToProps, mapDispatchToProps)(PostsList);
+export default connect(mapStateToProps, mapDispatchToProps)(BookmarkPostsList);

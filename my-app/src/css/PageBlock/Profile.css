@@ -76,6 +76,7 @@
 
 .user-count > div {
     font-weight: 400;
+    width: 23%;
 }
 
 .user-count > div a {

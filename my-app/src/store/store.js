@@ -5,8 +5,11 @@ import {combineReducers, createStore, applyMiddleware} from "redux";
 // import platformReducer from "../reducers/platform.reducer.js";
 import isLog from "./../reducres/isLog.reducer";
 import user from "./../reducres/user.reducer";
+import users from "./../reducres/users.reducer";
 import posts from "./../reducres/posts.reducer";
 import myPosts from "./../reducres/myPosts.reducer";
+import favoritePosts from "./../reducres/favoritePosts.reducer";
+import bookmarkPosts from "./../reducres/bookmarkPosts.reducer";
 
 import thunk from 'redux-thunk'
 
@@ -17,7 +20,10 @@ export const rootReducer = combineReducers({
   isLog: isLog,
   user: user,
   posts,
-  myPosts
+  myPosts,
+  favoritePosts,
+  bookmarkPosts,
+  users
 })
 
 //export const store = createStore(rootReducer);

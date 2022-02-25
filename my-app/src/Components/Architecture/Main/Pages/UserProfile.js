@@ -5,6 +5,7 @@ import Nav from './../Nav/Nav.js';
 import MyPostsList from "./Lists/MyPostsList.js";
 import Button from "./../../../Common/Button.js";
 import Input from "../../../Common/Input.js";
+import ErrorMessage from "../../../Common/ErrorMessage.js";
 
 import './../../../../css/PageBlock/Profile.css';
 
@@ -22,16 +23,25 @@ import {connect} from "react-redux";
 
 
 
-function createPostBtn(event) {
+function createPostBtn(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost) {
+    setTitle('');
+    setContent('');
+    setTitleErrorForNewPost('');
+    setContentErrorForNewPost('');
+
     let newPost = event.target.closest('div').children[2];
 
     newPost.classList.toggle('display-block');
 }
 
-function closePost(event) {
+function closePost(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost) {
     let closeBtn = event.target.closest('.new-post');
 
     closeBtn.classList.remove('display-block');
+    setTitle('');
+    setContent('');
+    setTitleErrorForNewPost('');
+    setContentErrorForNewPost('');
 }
 
 function openEditor(event) {
@@ -46,16 +56,34 @@ function closePopup(event) {
     closeBtn.classList.remove('display-block');
 }
 
-async function createPostConfirm(data, setTitle, setContent, props, event) {
-    props.createPost(data)
-    setTitle('');
-    setContent('');
-    closePost(event)
+async function createPostConfirm(data, setTitle, setContent, props, event, setTitleErrorForNewPost, setContentErrorForNewPost) {
+    if(data.title.trim() != '') {
+        if(data.content.trim() != '') {
+            props.createPost(data)
+            setTitle('');
+            setContent('');
+            setTitleErrorForNewPost('');
+            setContentErrorForNewPost('');
+            closePost(event)
+        } else {
+            let input = event.target.closest('.new-post').children[1].children[1].children[1];
+            input.focus();
+            
+            setTitleErrorForNewPost('');
+            setContentErrorForNewPost('The content is empty');
+        }
+    } else {
+        let input = event.target.closest('.new-post').children[1].children[0].children[1];
+        input.focus();
+
+        setTitleErrorForNewPost('The title is empty');
+    }
 }
 
 function UserProfile(props) {
 
-    // const [count, setCount] = useState(0);
+    const [titleErrorForNewPost, setTitleErrorForNewPost] = useState('');
+    const [contentErrorForNewPost, setContentErrorForNewPost] = useState('');
 
     // useEffect(() => {
     //     likedPosts();
@@ -138,14 +166,14 @@ function UserProfile(props) {
                             <div className="friends-count"><NavLink to='/Friends'><span className="count"></span>friends</NavLink></div>
                             <div className="friends-count"><a href="#posts"><span className="count">{props.myPosts.myPosts.data.length}</span>posts</a></div>
                             <div className="friends-count"><NavLink to='/Favorites'><span className="count">{props.user.user.data.countLikes}</span>favorites</NavLink></div>
-                            <div className="friends-count"><NavLink to='/Bookmarks'><span className="count"></span>bookmarks</NavLink></div>
+                            <div className="friends-count"><NavLink to='/Bookmarks'><span className="count">{props.user.user.data.countBookmarks}</span>bookmarks</NavLink></div>
                         </div>
                     </div>
 
                     <div className='title-wrapper' id="posts">
                         <h1>My posts:</h1>
 
-                        <Button onClick={createPostBtn} className="create-post" innerHTML="Create post" />
+                        <Button onClick={(event) => createPostBtn(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost)} className="create-post" innerHTML="Create post" />
 
                         <div className="new-post">
                             <div className="post-author">
@@ -154,17 +182,19 @@ function UserProfile(props) {
                             </div>
                             <div className="post-content">
                                 <div className="title-name">
-                                    <Input type={"text"} value={title} func={handleChangeTitle} placeholder="Insert title" />
+                                    <ErrorMessage innerHTML={titleErrorForNewPost} />
+                                    <Input type={"text"} value={title} func={handleChangeTitle} placeholder="Insert title" required="required" maxLength={50} minLength={1} />
                                 </div>
                                 <div className="content">
+                                    <ErrorMessage innerHTML={contentErrorForNewPost} />
                                     <textarea type="text" value={content} onChange={handleChangeContent}></textarea>
                                 </div>
                             </div>
                             <div className="post-controllers">
-                                <Button className="confirm-btn" onClick={(event) => createPostConfirm({"title": title, "content": content}, setTitle, setContent, props, event)} innerHTML="Send new post" />
+                                <Button className="confirm-btn" onClick={(event) => createPostConfirm({"title": title, "content": content}, setTitle, setContent, props, event, setTitleErrorForNewPost, setContentErrorForNewPost)} innerHTML="Send new post" />
                                 {/* <Button className="confirm-btn" onClick={() => createPostConfirm({title: title, content: content})} innerHTML="Send new post" /> */}
                                 <Button className="attach-btn"innerHTML={<><img src={attachBtn} alt="Attach icon"></img><Input type="file" /></>} />
-                                <Button className="close-btn" onClick={closePost} innerHTML={<img className="close-icon" src={closeIcon} alt="Close icon"></img>} />
+                                <Button className="close-btn" onClick={(event) => closePost(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost)} innerHTML={<img className="close-icon" src={closeIcon} alt="Close icon"></img>} />
                             </div>
                         </div>
                     </div>

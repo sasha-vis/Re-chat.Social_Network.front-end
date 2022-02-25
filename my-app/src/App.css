@@ -31,3 +31,10 @@ a {
 button {
   cursor: pointer;
 }
+
+.error-message {
+  color: red;
+  height: 30px;
+  display: flex;
+  align-items: center;
+}

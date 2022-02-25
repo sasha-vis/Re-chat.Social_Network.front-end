@@ -1,7 +1,7 @@
 import React from "react";
 
 import Nav from './../Nav/Nav.js';
-import PostsList from './Lists/PostsList.js';
+import FavoritesPostsList from './Lists/FavoritesPostsList.js';
 import Button from "./../../../Common/Button.js";
 
 import './../../../../css/PageBlock/Profile.css';
@@ -19,7 +19,7 @@ function Favorites() {
                     <h1>Favorites</h1>
                 </div>
 
-                <PostsList dltBtn={<Button className="close-btn" innerHTML={<img className="close-icon" src={closeIcon} alt="Close icon"></img>} />} />
+                <FavoritesPostsList />
 
             </main>
         </div>
