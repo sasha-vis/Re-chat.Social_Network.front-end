@@ -8,35 +8,52 @@ import { getUserData } from './../../../../actions/user.action';
 import NavForAuth from './../Nav/Common/NavForAuth.js';
 import Button from "../../../Common/Button";
 import Input from "../../../Common/Input";
+import ErrorMessage from "../../../Common/ErrorMessage";
 // import axios from "axios";
 
 const url = 'https://localhost:7103/Account/Login';
 
-async function login(data, props) {
-    try {
-    const response = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            "Content-Type": "application/json"
+async function login(data, props, setEmailErrorForNewPost, setPasswordErrorForNewPost, setEmail, setPassword) {
+    if(data.email.trim() != '') {
+        if(data.password.trim() != '') {
+            try {
+            const response = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            const json = await response.json();
+            if (json.token) {
+                localStorage.setItem("token", JSON.stringify(json));
+                props.changeButton();
+                props.getUserData();
+                setEmail('');
+                setPassword('');
+                setEmailErrorForNewPost('');
+                setPasswordErrorForNewPost('');
+            } else {
+                console.error('Ошибка:');
+            }
+            } catch (error) {
+            console.error('Ошибка:', error);
+            }
+        } else {
+            setEmailErrorForNewPost('');
+            setPasswordErrorForNewPost('The password is empty');
         }
-    });
-    const json = await response.json();
-    if (json.token) {
-        localStorage.setItem("token", JSON.stringify(json));
-        props.changeButton();
-        props.getUserData();
     } else {
-        console.error('Ошибка:');
-    }
-    } catch (error) {
-    console.error('Ошибка:', error);
+        setEmailErrorForNewPost('The email is empty');
     }
 }
 
 function SignIn(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const [emailErrorForNewPost, setEmailErrorForNewPost] = useState('');
+    const [passwordErrorForNewPost, setPasswordErrorForNewPost] = useState('');
 
     function handleChangeEmail(event) {
         setEmail(event.target.value);
@@ -59,9 +76,11 @@ function SignIn(props) {
                 </div>
 
                 <form className="auth-form">
+                    <ErrorMessage innerHTML={emailErrorForNewPost} />
                     <div><Input type={"email"} value={email} func={handleChangeEmail} placeholder="Insert email" /></div>
+                    <ErrorMessage innerHTML={passwordErrorForNewPost} />
                     <div><Input type={"password"} value={password} func={handleChangePassword} placeholder="Insert password" /></div>
-                    <Button innerHTML={<NavLink to="/" onClick={() => login({"email": email, "password": password}, props)}>Sign in</NavLink>} />
+                    <Button onClick={() => login({"email": email, "password": password}, props, setEmailErrorForNewPost, setPasswordErrorForNewPost, setEmail, setPassword)} innerHTML={<NavLink to="/">Sign in</NavLink>} />
                 </form>
 
             </main>
