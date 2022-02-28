@@ -13,7 +13,7 @@ import attachBtn from './../../../../images/attachments.png';
 import closeIcon from './../../../../images/close.png';
 import { setData } from "../../../../actions/user.action.js";
 
-import { createPost2 } from "../../../../actions/posts.action.js";
+import { createPostFromMain, getData } from "../../../../actions/posts.action.js";
 
 function createPostBtn(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost) {
     setTitle('');
@@ -55,15 +55,16 @@ const url = 'https://localhost:7103/Post';
 //         }
 // }
 
-async function createPostConfirm(data, setTitle, setContent, props, event, setTitleErrorForNewPost, setContentErrorForNewPost) {
+async function createPostConfirm(data, props, event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost, getPostsData) {
     if(data.title.trim() != '') {
         if(data.content.trim() != '') {
             props.createPost(data)
+            getPostsData();
             setTitle('');
             setContent('');
             setTitleErrorForNewPost('');
             setContentErrorForNewPost('');
-            closePost(event)
+            closePost(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost)
         } else {
             let input = event.target.closest('.new-post').children[1].children[1].children[1];
             input.focus();
@@ -94,6 +95,9 @@ function Posts(props){
         setContent(event.target.value);
     }
 
+    async function getPostsData() {
+        props.getData()
+    }
     return (
         <div className="posts-block">
 
@@ -108,7 +112,9 @@ function Posts(props){
                     <div className="new-post">
                         <div className="post-author">
                             <img className="author-img" src={authorIcon} alt="User"></img>
-                            <h3>Sasha Vysotski</h3>
+                            <h3>
+                                {props.user != 0 ? `${props.user.user.data.name} ${props.user.user.data.surname}` : ''}
+                            </h3>
                         </div>
                         <div className="post-content">
                             <div className="title-name">
@@ -121,7 +127,7 @@ function Posts(props){
                             </div>
                         </div>
                         <div className="post-controllers">
-                            <Button onClick={(event) => createPostConfirm({"title": title, "content": content}, setTitle, setContent, props, event, setTitleErrorForNewPost, setContentErrorForNewPost)} className="confirm-btn" innerHTML="Send new post" />
+                            <Button onClick={(event) => createPostConfirm({"title": title, "content": content}, props, event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost, getPostsData)} className="confirm-btn" innerHTML="Send new post" />
                             <Button className="attach-btn" innerHTML={<><img src={attachBtn} alt="Attach icon"></img><Input type="file" /></>} />
                             <Button className="close-btn" onClick={closePost} innerHTML={<img className="close-icon" src={closeIcon} alt="Close icon"></img>} />
                         </div>
@@ -136,11 +142,14 @@ function Posts(props){
 }
 
 const mapStateToProps = (state) => ({
-    isLog: state.isLog
+    isLog: state.isLog,
+    user: state.user,
+    posts: state.posts
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    createPost: (data) => dispatch(createPost2(data))
+    createPost: (data) => dispatch(createPostFromMain(data)),
+    getData: () => dispatch(getData())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Posts);

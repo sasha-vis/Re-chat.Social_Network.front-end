@@ -13,7 +13,7 @@ import ErrorMessage from "../../../Common/ErrorMessage";
 
 const url = 'https://localhost:7103/Account/Login';
 
-async function login(data, props, setEmailErrorForNewPost, setPasswordErrorForNewPost, setEmail, setPassword) {
+async function login(data, props, setEmailError, setPasswordError, setEmail, setPassword) {
     if(data.email.trim() != '') {
         if(data.password.trim() != '') {
             try {
@@ -31,8 +31,8 @@ async function login(data, props, setEmailErrorForNewPost, setPasswordErrorForNe
                 props.getUserData();
                 setEmail('');
                 setPassword('');
-                setEmailErrorForNewPost('');
-                setPasswordErrorForNewPost('');
+                setEmailError('');
+                setPasswordError('');
             } else {
                 console.error('Ошибка:');
             }
@@ -40,11 +40,11 @@ async function login(data, props, setEmailErrorForNewPost, setPasswordErrorForNe
             console.error('Ошибка:', error);
             }
         } else {
-            setEmailErrorForNewPost('');
-            setPasswordErrorForNewPost('The password is empty');
+            setEmailError('');
+            setPasswordError('The password is empty');
         }
     } else {
-        setEmailErrorForNewPost('The email is empty');
+        setEmailError('The email is empty');
     }
 }
 
@@ -52,8 +52,8 @@ function SignIn(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const [emailErrorForNewPost, setEmailErrorForNewPost] = useState('');
-    const [passwordErrorForNewPost, setPasswordErrorForNewPost] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
 
     function handleChangeEmail(event) {
         setEmail(event.target.value);
@@ -76,11 +76,11 @@ function SignIn(props) {
                 </div>
 
                 <form className="auth-form">
-                    <ErrorMessage innerHTML={emailErrorForNewPost} />
+                    <ErrorMessage innerHTML={emailError} />
                     <div><Input type={"email"} value={email} func={handleChangeEmail} placeholder="Insert email" /></div>
-                    <ErrorMessage innerHTML={passwordErrorForNewPost} />
+                    <ErrorMessage innerHTML={passwordError} />
                     <div><Input type={"password"} value={password} func={handleChangePassword} placeholder="Insert password" /></div>
-                    <Button onClick={() => login({"email": email, "password": password}, props, setEmailErrorForNewPost, setPasswordErrorForNewPost, setEmail, setPassword)} innerHTML={<NavLink to="/">Sign in</NavLink>} />
+                    <Button onClick={() => login({"email": email, "password": password}, props, setEmailError, setPasswordError, setEmail, setPassword)} innerHTML={<NavLink to="/">Sign in</NavLink>} />
                 </form>
 
             </main>

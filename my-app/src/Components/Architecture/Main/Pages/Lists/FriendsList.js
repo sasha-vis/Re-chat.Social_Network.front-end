@@ -6,10 +6,14 @@ import Button from "../../../../Common/Button";
 
 import {connect} from "react-redux";
 import { getUsersData } from "../../../../../actions/user.action";
+import { getRequestsData } from "../../../../../actions/requestsForFriendship.action";
+import { getFriendsData } from "../../../../../actions/friends.action";
 
 function FriendsList(props) {
 
     useEffect(function(){
+        getRequestsData();
+        getFriendsData();
         getUsersData();
     }, []);
 
@@ -17,28 +21,119 @@ function FriendsList(props) {
         props.getUsersData()
     }
 
+    async function getRequestsData() {
+        props.getRequestsData()
+    }
+    
+    async function getFriendsData() {
+        props.getFriendsData()
+    }
+
+    async function sendRequest(data) {
+        console.log(JSON.stringify(data))
+        let token = JSON.parse(localStorage.getItem('token')).token;
+        const response = await fetch("https://localhost:7103/Friend", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        })
+        getUsersData();
+        getRequestsData();
+    }
+    async function confirmRequest(data) {
+        console.log(JSON.stringify(data))
+        let token = JSON.parse(localStorage.getItem('token')).token;
+        const response = await fetch("https://localhost:7103/Friend/ResponseToRequestFriend", {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        })
+        getUsersData();
+        getRequestsData();
+    }
+    async function refuseRequest(data) {
+        let token = JSON.parse(localStorage.getItem('token')).token;
+        const response = await fetch("https://localhost:7103/Friend", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        })
+        getUsersData();
+        getRequestsData();
+    }
+
     return (
-        <ul className="friends-list">
-            {props.users != 0 ?
-                props.users.users.data.map((item, index) => 
-                    <li className="post" key={index}>
+        <div>
+            {props.requests != 0 ?
+                (props.requests.requestsForFriendship.data.length != 0 ? 
+                    <ul className="friends-list">
+                    <h3>Friend requests:</h3>
+                    {props.requests.requestsForFriendship.data.map((item, index) => 
+                        <li className="request" key={index}>
+                            {console.log(item)}
                         <img src={authorIcon} alt="User"></img>
                         <h3><span className="friend-name">{item.name}</span><span className="friend-surname">{item.surname}</span></h3>
                         <div className="friend-controller">
-                            <Button className="delete-friend" innerHTML="Delete" />
-                            <Button className="messege-friend" innerHTML="Send a messege" />
+                            <Button onClick={() => refuseRequest({"friendId": item.id})} className="refuse-request" innerHTML="Refuse request" />
+                            <Button onClick={() => confirmRequest({"userId": item.userId})} className="confirm-request" innerHTML="Confrim request" />
                         </div>
-                    </li>) : <div>You don't have friends</div>}
-        </ul>
+                    </li>)}
+                </ul> : '') : ''
+            }
+            {props.friends != 0 ?
+                (props.friends.friends.data.length != 0 ? 
+                    <ul className="friends-list">
+                    <h3>Your friends:</h3>
+                    {props.friends.friends.data.map((item, index) => 
+                        <li className="friend" key={index}>
+                            {console.log(item)}
+                        <img src={authorIcon} alt="User"></img>
+                        <h3><span className="friend-name">{item.name}</span><span className="friend-surname">{item.surname}</span></h3>
+                        <div className="friend-controller">
+                            <Button onClick={() => refuseRequest({"friendId": item.id})} className="refuse-request" innerHTML="Delete friend" />
+                            <Button onClick={() => confirmRequest({"userId": item.userId})} className="confirm-request" innerHTML="Send a message" />
+                        </div>
+                    </li>)}
+                </ul> : <div className="no-friends">You don't have any friend. To start chat, add new friend below</div>) : ''
+            }
+            {props.users != 0 && props.user != 0 ?
+                <ul className="friends-list">
+                <h3>Find new friends:</h3>
+                {props.users.users.data.map((item, index) => 
+                    (item.isFriend === false && item.id !== props.user.user.data.id ? <li className="post" key={index}>
+                    <img src={authorIcon} alt="User"></img>
+                    <h3><span className="friend-name">{item.name}</span><span className="friend-surname">{item.surname}</span></h3>
+                    <div className="friend-controller">
+                        <Button onClick={() => sendRequest({"friendId": item.id})} className="send-request" innerHTML="Add to friends" />
+                        {/* <Button className="delete-friend" innerHTML="Delete" /> */}
+                        {/* <Button className="messege-friend" innerHTML="Send a messege" /> */}
+                    </div>
+                </li> : '' ))}
+                </ul> : ''}
+        </div>
     )
 }
 
 const mapStateToProps = (state) => ({
-    users: state.users
+    users: state.users,
+    requests: state.requestsForFriendship,
+    user: state.user,
+    friends: state.friends
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    getUsersData: () => dispatch(getUsersData())
+    getUsersData: () => dispatch(getUsersData()),
+    getRequestsData: () => dispatch(getRequestsData()),
+    getFriendsData: () => dispatch(getFriendsData())
 })
   
 export default connect(mapStateToProps, mapDispatchToProps)(FriendsList);

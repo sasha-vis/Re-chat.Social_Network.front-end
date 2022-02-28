@@ -23,6 +23,12 @@
     width: 40%;
 }
 
+.friends-list > h3 {
+    margin-bottom: 30px;
+    font-size: 24px;
+    padding-left: 30px;
+}
+
 .friends-list li {
     display: flex;
     align-items: center;
@@ -32,6 +38,10 @@
     background-color: #fff;
     border-radius: 10px;
     border: 1px solid #dbdbdb;
+}
+
+.friends-list .request {
+    border: 2px solid orange;
 }
 
 .friends-list li img {
@@ -65,4 +75,37 @@
 
 .friend-controller .messege-friend {
     background-color: #159d15;
+}
+
+.friend-controller .send-request {
+    background-color: #81aac5;
+}
+
+.friend-controller .send-request:hover {
+    background-color: #6b8fa7;
+}
+
+.friend-controller .refuse-request {
+    background-color: #df4b4b;
+    margin-bottom: 20px;
+}
+
+.friend-controller .refuse-request:hover {
+    background-color: #b13e3e;
+}
+
+.friend-controller .confirm-request {
+    background-color: #159d15;
+}
+
+.friend-controller .confirm-request:hover {
+    background-color: #127a12;
+}
+
+
+
+.no-friends {
+    margin-bottom: 30px;
+    font-size: 22px;
+    font-style: italic;
 }

@@ -7,30 +7,131 @@ import { changeButton } from './../../../../actions/isLog.action';
 import NavForAuth from "./../Nav/Common/NavForAuth.js";
 import Button from "../../../Common/Button";
 import Input from "../../../Common/Input";
+import ErrorMessage from "../../../Common/ErrorMessage";
 
 const url = 'https://localhost:7103/Account/Registration';
 
-async function registration(data, props) {
-    try {
-    const response = await fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-            "Content-Type": "application/json"
-            // 'Access-Control-Allow-Origin': '*',
-            // 'Accept':'application/json'
+async function registration(
+    data, 
+    props, 
+    setEmailError, 
+    setPasswordError,
+    setCpasswordError,
+    setUsernameError,
+    setSurnameError,
+    setGenderError,
+    setBirthdateError,
+    setPhotoError,
+    setEmail,
+    setPassword,
+    setCpassword,
+    setUsername,
+    setSurname,
+    setGender,
+    setBirthdate,
+    setPhoto) {
+    if(data.email.trim() != ''){
+        if(data.password.trim() != ''){
+            if(data.confirmPassword.trim() != ''){
+                if(data.password === data.confirmPassword) {
+                    if(data.name.trim() != ''){
+                        if(data.surname.trim() != ''){
+                            if(data.gender.trim() != ''){
+                                if(data.birthdayDate.trim() != ''){
+                                    // if(data.photo.trim() != ''){
+                                        try {
+                                            const response = await fetch(url, {
+                                                method: 'POST',
+                                                body: JSON.stringify(data),
+                                                headers: {
+                                                    "Content-Type": "application/json"
+                                                    // 'Access-Control-Allow-Origin': '*',
+                                                    // 'Accept':'application/json'
+                                                }
+                                            });
+                                            const json = await response.json();
+                                            console.log('Успех:', JSON.stringify(json));
+                                            if (json.token) {
+                                                localStorage.setItem("token", JSON.stringify(json));
+                                                props.changeButton();
+                                                setEmail('');
+                                                setPassword('');
+                                                setCpassword('');
+                                                setUsername('');
+                                                setSurname('');
+                                                setGender('');
+                                                setBirthdate('');
+                                                setPhoto('');
+                                                setEmailError('');
+                                                setPasswordError('');
+                                                setCpasswordError('');
+                                                setUsernameError('');
+                                                setSurnameError('');
+                                                setGenderError('');
+                                                setBirthdateError('');
+                                                setPhotoError('');
+                                            } else {
+                                                console.error('Ошибка:');
+                                            }
+                                            } catch (error) {
+                                            console.error('Ошибка:', error);
+                                            }
+                                    // } else {
+                                    //     setPhotoError('The photo is empty')
+                                    //     setEmailError('')
+                                    //     setPasswordError('')
+                                    //     setCpasswordError('')
+                                    //     setUsernameError('')
+                                    //     setSurnameError('')
+                                    //     setGenderError('')
+                                    //     setBirthdateError('')
+                                    // }
+                                } else {
+                                    setBirthdateError('The birthdate is empty')
+                                    setEmailError('')
+                                    setPasswordError('')
+                                    setCpasswordError('')
+                                    setUsernameError('')
+                                    setSurnameError('')
+                                    setGenderError('')
+                                }
+                            } else {
+                                setGenderError('The gender is empty')
+                                setEmailError('')
+                                setPasswordError('')
+                                setCpasswordError('')
+                                setUsernameError('')
+                                setSurnameError('')
+                            }
+                        } else {
+                            setSurnameError('The surname is empty')
+                            setEmailError('')
+                            setPasswordError('')
+                            setCpasswordError('')
+                            setUsernameError('')
+                        }
+                    } else {
+                        setUsernameError('The username is empty')
+                        setEmailError('')
+                        setPasswordError('')
+                        setCpasswordError('')
+                    }
+                } else {
+                    setCpasswordError("Passwords don't match")
+                    setEmailError('')
+                    setPasswordError('')
+                }
+            } else {
+                setCpasswordError('The confirm password is empty')
+                setEmailError('')
+                setPasswordError('')
+            }
+        } else {
+            setPasswordError('The password is empty')
+            setEmailError('')
         }
-    });
-    const json = await response.json();
-    console.log('Успех:', JSON.stringify(json));
-    if (json.token) {
-        localStorage.setItem("token", JSON.stringify(json));
-        props.changeButton();
     } else {
-        console.error('Ошибка:');
-    }
-    } catch (error) {
-    console.error('Ошибка:', error);
+        setEmailError('The email is empty')
     }
 }
 
@@ -71,6 +172,15 @@ function SignUp(props) {
         setPhoto(event.target.value);
     }
 
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [cPasswordError, setCpasswordError] = useState('');
+    const [usernameError, setUsernameError] = useState('');
+    const [surnameError, setSurnameError] = useState('');
+    const [genderError, setGenderError] = useState('');
+    const [birthdateError, setBirthdateError] = useState('');
+    const [photoError, setPhotoError] = useState('');
+
     return (
         <div className="sign-up-block">
 
@@ -83,13 +193,21 @@ function SignUp(props) {
                 </div>
 
                 <form className="auth-form">
+                    <ErrorMessage innerHTML={emailError} />
                     <div><Input type={"email"} value={email} func={handleChangeEmail} placeholder="Insert email" /></div>
+                    <ErrorMessage innerHTML={passwordError} />
                     <div><Input type={"password"} value={password} func={handleChangePassword} placeholder="Insert password" /></div>
+                    <ErrorMessage innerHTML={cPasswordError} />
                     <div><Input type={"password"} value={cPassword} func={handleChangeCpassword} placeholder="Confirm password" /></div>
+                    <ErrorMessage innerHTML={usernameError} />
                     <div><Input type={"text"} value={username} func={handleChangeName} placeholder="Insert name" /></div>
+                    <ErrorMessage innerHTML={surnameError} />
                     <div><Input type={"text"} value={surname} func={handleChangeSurname} placeholder="Insert surname" /></div>
+                    <ErrorMessage innerHTML={genderError} />
                     <div><Input type={"text"} value={gender} func={handleChangeGender} placeholder="Select gender" /></div>
+                    <ErrorMessage innerHTML={birthdateError} />
                     <div><Input type={"text"} value={birthdate} func={handleChangeBirthdate} placeholder="Insert birth date" /></div>
+                    <ErrorMessage innerHTML={photoError} />
                     <div><Input type={"text"} value={photo} func={handleChangePhoto} placeholder="Stick a photo" /></div>
                     <Button innerHTML={<NavLink to="/" onClick={() => registration({    "email": email,
                                                                                         "password": password,
@@ -98,7 +216,24 @@ function SignUp(props) {
                                                                                         "surname": surname,
                                                                                         "gender": gender,
                                                                                         "birthdayDate": birthdate,
-                                                                                        "photo": photo }, props)}>Sign up</NavLink>} />
+                                                                                        "photo": photo }, 
+                                                                                        props, 
+                                                                                        setEmailError, 
+                                                                                        setPasswordError,
+                                                                                        setCpasswordError,
+                                                                                        setUsernameError,
+                                                                                        setSurnameError,
+                                                                                        setGenderError,
+                                                                                        setBirthdateError,
+                                                                                        setPhotoError,
+                                                                                        setEmail,
+                                                                                        setPassword,
+                                                                                        setCpassword,
+                                                                                        setUsername,
+                                                                                        setSurname,
+                                                                                        setGender,
+                                                                                        setBirthdate,
+                                                                                        setPhoto)}>Sign up</NavLink>} />
                 </form>
 
             </main>

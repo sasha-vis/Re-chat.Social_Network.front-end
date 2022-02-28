@@ -79,12 +79,12 @@ export const createPost = (dataPost) => async (dispatch) => {
     
     dispatch({type: SET_MYPOSTS, data})
 }
-export const createPost2 = (dataPost) => async (dispatch) => {
+export const createPostFromMain = (dataPost) => async (dispatch) => {
     const header = JSON.parse(localStorage.getItem("token"));
     const body = { title: dataPost.title, content: dataPost.content }
     
     
-    let data = await axios.post("https://localhost:7103/Post", body, {headers:{"Authorization" : `Bearer ${header.token}`}})
+    let data = await axios.post("https://localhost:7103/Post/Create", body, {headers:{"Authorization" : `Bearer ${header.token}`}})
     
     dispatch({type: SET_POSTS, data})
 }

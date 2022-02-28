@@ -10,6 +10,8 @@ import posts from "./../reducres/posts.reducer";
 import myPosts from "./../reducres/myPosts.reducer";
 import favoritePosts from "./../reducres/favoritePosts.reducer";
 import bookmarkPosts from "./../reducres/bookmarkPosts.reducer";
+import requestsForFriendship from "./../reducres/requestsForFriendship.reducer";
+import friends from "./../reducres/friends.reducer";
 
 import thunk from 'redux-thunk'
 
@@ -23,7 +25,9 @@ export const rootReducer = combineReducers({
   myPosts,
   favoritePosts,
   bookmarkPosts,
-  users
+  users,
+  requestsForFriendship,
+  friends
 })
 
 //export const store = createStore(rootReducer);
