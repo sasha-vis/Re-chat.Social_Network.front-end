@@ -56,11 +56,13 @@ function FriendsList(props) {
         })
         getUsersData();
         getRequestsData();
+        getFriendsData();
     }
     async function refuseRequest(data) {
+        console.log(data)
         let token = JSON.parse(localStorage.getItem('token')).token;
         const response = await fetch("https://localhost:7103/Friend", {
-            method: 'POST',
+            method: 'DELETE',
             body: JSON.stringify(data),
             headers: {
                 "Content-Type": "application/json",
@@ -69,6 +71,20 @@ function FriendsList(props) {
         })
         getUsersData();
         getRequestsData();
+        getFriendsData();
+    }
+
+    function setButton(isFriend, data) {
+        if(isFriend == 0){
+            return <Button onClick={() => sendRequest({"friendId": data.friendId})} className="send-request" innerHTML="Add to friends" />
+        } else if (isFriend == 1) {
+            return <Button className="sended-request" disabled="disabled" innerHTML="Request sended" />
+        } else if (isFriend == 2) {
+            return (<>
+                <Button onClick={() => refuseRequest({"friendId": data.friendId})} className="refuse-request" innerHTML="Refuse request" />
+                <Button onClick={() => confirmRequest({"userId": data.friendId})} className="confirm-request" innerHTML="Confirm request" />
+            </>)
+        }
     }
 
     return (
@@ -79,11 +95,10 @@ function FriendsList(props) {
                     <h3>Friend requests:</h3>
                     {props.requests.requestsForFriendship.data.map((item, index) => 
                         <li className="request" key={index}>
-                            {console.log(item)}
                         <img src={authorIcon} alt="User"></img>
                         <h3><span className="friend-name">{item.name}</span><span className="friend-surname">{item.surname}</span></h3>
                         <div className="friend-controller">
-                            <Button onClick={() => refuseRequest({"friendId": item.id})} className="refuse-request" innerHTML="Refuse request" />
+                            <Button onClick={() => refuseRequest({"friendId": item.userId})} className="refuse-request" innerHTML="Refuse request" />
                             <Button onClick={() => confirmRequest({"userId": item.userId})} className="confirm-request" innerHTML="Confrim request" />
                         </div>
                     </li>)}
@@ -95,11 +110,10 @@ function FriendsList(props) {
                     <h3>Your friends:</h3>
                     {props.friends.friends.data.map((item, index) => 
                         <li className="friend" key={index}>
-                            {console.log(item)}
                         <img src={authorIcon} alt="User"></img>
                         <h3><span className="friend-name">{item.name}</span><span className="friend-surname">{item.surname}</span></h3>
                         <div className="friend-controller">
-                            <Button onClick={() => refuseRequest({"friendId": item.id})} className="refuse-request" innerHTML="Delete friend" />
+                            <Button onClick={() => refuseRequest({"friendId": item.userId})} className="refuse-request" innerHTML="Delete friend" />
                             <Button onClick={() => confirmRequest({"userId": item.userId})} className="confirm-request" innerHTML="Send a message" />
                         </div>
                     </li>)}
@@ -109,15 +123,15 @@ function FriendsList(props) {
                 <ul className="friends-list">
                 <h3>Find new friends:</h3>
                 {props.users.users.data.map((item, index) => 
-                    (item.isFriend === false && item.id !== props.user.user.data.id ? <li className="post" key={index}>
+                    <li className="post" key={index}>
                     <img src={authorIcon} alt="User"></img>
                     <h3><span className="friend-name">{item.name}</span><span className="friend-surname">{item.surname}</span></h3>
                     <div className="friend-controller">
-                        <Button onClick={() => sendRequest({"friendId": item.id})} className="send-request" innerHTML="Add to friends" />
+                        {setButton(item.isFriend, {"friendId": item.userId})}
                         {/* <Button className="delete-friend" innerHTML="Delete" /> */}
                         {/* <Button className="messege-friend" innerHTML="Send a messege" /> */}
                     </div>
-                </li> : '' ))}
+                </li>)}
                 </ul> : ''}
         </div>
     )

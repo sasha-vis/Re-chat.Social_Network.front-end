@@ -22,7 +22,7 @@ export const getUserData = () => async (dispatch) => {
 }
 export const getUsersData = () => async (dispatch) => {
     let token = JSON.parse(localStorage.getItem('token')).token;
-    let data = await axios.get('https://localhost:7103/User', {
+    let data = await axios.get('https://localhost:7103/Friend/FriendsToAddByUser', {
         method: 'GET',
         headers: {
             "Accept": "application/json",
