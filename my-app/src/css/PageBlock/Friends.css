@@ -99,6 +99,14 @@
     background-color: #159d15;
 }
 
+.friend-controller .send-message {
+    background-color: #cdc024;
+}
+
+.friend-controller .send-message:hover {
+    background-color: #b1a521;
+}
+
 .friend-controller .confirm-request:hover {
     background-color: #127a12;
 }

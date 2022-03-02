@@ -14,6 +14,7 @@ import Favorites from "./Pages/Favorites";
 
 import PrivateRoute from "./../../Hoc/PrivateRoute.js";
 import AuthorizedPrivateRoute from "../../Hoc/AuthorizedPrivateRoute";
+import EditProfile from "./Pages/EditProfile";
 
 function Main() {
     return (
@@ -31,6 +32,7 @@ function Main() {
                         <Route exact path="/Friends" element={<PrivateRoute><Friends /></PrivateRoute>} />
                         <Route exact path="/Bookmarks" element={<PrivateRoute><Bookmarks /></PrivateRoute>} />
                         <Route exact path="/Favorites" element={<PrivateRoute><Favorites /></PrivateRoute>} />
+                        <Route exact path="/EditProfile/*" element={<PrivateRoute><EditProfile /></PrivateRoute>} />
                     </Routes>
 
                 </div>

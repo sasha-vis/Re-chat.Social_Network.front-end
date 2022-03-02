@@ -148,10 +148,11 @@ function UserProfile(props) {
 
                 {(props.user != 0 && props.myPosts != 0) ?
                 <div className="user-profile">
+                    {console.log(props.user)}
                 <div className="user-profile-left">
                     <div className="user-avatar">
                         <img src={authorIcon} alt="User"></img>
-                        <Button className="edit-btn" onClick={openEditor} innerHTML="Edit profile" />
+                        <Button className="edit-btn" innerHTML={<NavLink to='/EditProfile'>Edit Profile</NavLink>} />
                     </div>
                 </div>
                 <div className="user-profile-right">
@@ -163,7 +164,7 @@ function UserProfile(props) {
                         <div className="registration-date">Registration date: <span>{props.user.user.data.registrationDate}</span></div>
                         <hr/>
                         <div className="user-count">
-                            <div className="friends-count"><NavLink to='/Friends'><span className="count"></span>friends</NavLink></div>
+                            <div className="friends-count"><NavLink to='/Friends'><span className="count">{props.user.user.data.countFriends}</span>friends</NavLink></div>
                             <div className="friends-count"><a href="#posts"><span className="count">{props.myPosts.myPosts.data.length}</span>posts</a></div>
                             <div className="friends-count"><NavLink to='/Favorites'><span className="count">{props.user.user.data.countLikes}</span>favorites</NavLink></div>
                             <div className="friends-count"><NavLink to='/Bookmarks'><span className="count">{props.user.user.data.countBookmarks}</span>bookmarks</NavLink></div>
