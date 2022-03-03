@@ -123,11 +123,24 @@
     border: 2px solid #000;
 }
 
+.user-profile .post-author .edit-btn-for-post {
+    position: absolute;
+    right: 50px;
+    display: flex;
+    top: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: #eda010;
+    padding: 5px;
+    border: 2px solid #000;
+}
+
 .user-profile .post-author .close-btn img,
+.user-profile .post-author .edit-btn-for-post img,
 .favorites-block .post-author .close-btn img,
 .bookmark-block .post-author .close-btn img {
-    width: 10px;
-    height: 10px;
+    width: 13px;
+    height: 13px;
 }
 
 .user-nav {
@@ -196,6 +209,10 @@
 .user-block .title-wrapper > h1 img {
     width: 25px;
     margin-right: 25px;
+}
+
+.user-block .title-wrapper > h1:hover a {
+    text-decoration: underline;
 }
 
 .user-profile-edit {
@@ -278,4 +295,35 @@
 
 .edit-block form input.checkbox {
     height: 25px;
+}
+
+.edit-post {
+    display: none;
+}
+
+.display-none {
+    display: none !important;
+}
+
+.edit-post .confirm-btn {
+    background-color: #eda010 !important;
+}
+
+.edit-post .confirm-btn:hover {
+    background-color: #cf8e15 !important;
+}
+
+.edit-post .close-btn {
+    border: 2px solid #393646;
+    width: 100px !important;
+    background-color: #ed1010;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    height: 100% !important;
+    padding: 5px 0 !important;
+}
+
+.edit-post .close-btn:hover {
+    background-color: #ca1414 !important;
 }

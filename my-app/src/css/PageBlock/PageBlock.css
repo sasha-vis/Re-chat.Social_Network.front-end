@@ -310,17 +310,20 @@
     margin-bottom: 15px;
 } */
 
-.new-post .title-name input {
+.new-post .title-name input,
+.edit-post .title-name input {
     padding: 10px;
     font-size: 16px;
     border: 2px solid #393646;
 }
 
-.new-post .content {
+.new-post .content,
+.edit-post .content {
     height: 100px;
 }
 
-.new-post .content textarea {
+.new-post .content textarea,
+.edit-post .content textarea {
     width: calc(100% - 24px);
     height: calc(100% - 54px);
     border: 2px solid #393646;

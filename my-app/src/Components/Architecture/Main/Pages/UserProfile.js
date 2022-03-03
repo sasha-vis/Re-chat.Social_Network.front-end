@@ -35,13 +35,14 @@ function createPostBtn(event, setTitle, setContent, setTitleErrorForNewPost, set
 }
 
 function closePost(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost) {
-    let closeBtn = event.target.closest('.new-post');
-
-    closeBtn.classList.remove('display-block');
     setTitle('');
     setContent('');
     setTitleErrorForNewPost('');
     setContentErrorForNewPost('');
+
+    let closeBtn = event.target.closest('.new-post');
+
+    closeBtn.classList.remove('display-block');
 }
 
 function openEditor(event) {
@@ -56,7 +57,7 @@ function closePopup(event) {
     closeBtn.classList.remove('display-block');
 }
 
-async function createPostConfirm(data, setTitle, setContent, props, event, setTitleErrorForNewPost, setContentErrorForNewPost) {
+async function createPostConfirm(data, setTitle, setContent, props, event, setTitleErrorForNewPost, setContentErrorForNewPost, getMyPostsData) {
     if(data.title.trim() != '') {
         if(data.content.trim() != '') {
             props.createPost(data)
@@ -64,7 +65,8 @@ async function createPostConfirm(data, setTitle, setContent, props, event, setTi
             setContent('');
             setTitleErrorForNewPost('');
             setContentErrorForNewPost('');
-            closePost(event)
+            closePost(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost)
+            getMyPostsData();
         } else {
             let input = event.target.closest('.new-post').children[1].children[1].children[1];
             input.focus();
@@ -148,7 +150,6 @@ function UserProfile(props) {
 
                 {(props.user != 0 && props.myPosts != 0) ?
                 <div className="user-profile">
-                    {console.log(props.user)}
                 <div className="user-profile-left">
                     <div className="user-avatar">
                         <img src={authorIcon} alt="User"></img>
@@ -174,7 +175,7 @@ function UserProfile(props) {
                     <div className='title-wrapper' id="posts">
                         <h1>My posts:</h1>
 
-                        <Button onClick={(event) => createPostBtn(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost)} className="create-post" innerHTML="Create post" />
+                        <Button onClick={(event) => createPostBtn(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost, getMyPostsData)} className="create-post" innerHTML="Create post" />
 
                         <div className="new-post">
                             <div className="post-author">
