@@ -36,73 +36,65 @@ async function registration(
                 if(data.password === data.confirmPassword) {
                     if(data.name.trim() != ''){
                         if(data.surname.trim() != ''){
-                            if(data.gender.trim() != ''){
-                                if(data.birthdayDate.trim() != ''){
-                                    // if(data.photo.trim() != ''){
-                                        try {
-                                            const response = await fetch(url, {
-                                                method: 'POST',
-                                                body: JSON.stringify(data),
-                                                headers: {
-                                                    "Content-Type": "application/json"
-                                                    // 'Access-Control-Allow-Origin': '*',
-                                                    // 'Accept':'application/json'
-                                                }
-                                            });
-                                            const json = await response.json();
-                                            console.log('Успех:', JSON.stringify(json));
-                                            if (json.token) {
-                                                localStorage.setItem("token", JSON.stringify(json));
-                                                props.changeButton();
-                                                setEmail('');
-                                                setPassword('');
-                                                setCpassword('');
-                                                setUsername('');
-                                                setSurname('');
-                                                setGender('');
-                                                setBirthdate('');
-                                                setPhoto('');
-                                                setEmailError('');
-                                                setPasswordError('');
-                                                setCpasswordError('');
-                                                setUsernameError('');
-                                                setSurnameError('');
-                                                setGenderError('');
-                                                setBirthdateError('');
-                                                setPhotoError('');
-                                            } else {
-                                                console.error('Ошибка:');
-                                            }
-                                            } catch (error) {
-                                            console.error('Ошибка:', error);
-                                            }
-                                    // } else {
-                                    //     setPhotoError('The photo is empty')
-                                    //     setEmailError('')
-                                    //     setPasswordError('')
-                                    //     setCpasswordError('')
-                                    //     setUsernameError('')
-                                    //     setSurnameError('')
-                                    //     setGenderError('')
-                                    //     setBirthdateError('')
-                                    // }
-                                } else {
-                                    setBirthdateError('The birthdate is empty')
-                                    setEmailError('')
-                                    setPasswordError('')
-                                    setCpasswordError('')
-                                    setUsernameError('')
-                                    setSurnameError('')
-                                    setGenderError('')
-                                }
-                            } else {
-                                setGenderError('The gender is empty')
-                                setEmailError('')
-                                setPasswordError('')
-                                setCpasswordError('')
-                                setUsernameError('')
-                                setSurnameError('')
+                            if(data.gender.trim() == '') {
+                                data.gender = "Male";
                             }
+                            if(data.birthdayDate.trim() == '') {
+                                let now = new Date().toLocaleDateString();
+                                let year = now.substring(6);
+                                let month = now.substring(3, 5);
+                                let day = now.substring(0, 2);
+
+                                data.birthdayDate = `${year}-${month}-${day}`;
+                            }
+                            // if(data.photo.trim() != ''){
+                                try {
+                                    const response = await fetch(url, {
+                                        method: 'POST',
+                                        body: JSON.stringify(data),
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                            // 'Access-Control-Allow-Origin': '*',
+                                            // 'Accept':'application/json'
+                                        }
+                                    });
+                                    const json = await response.json();
+                                    console.log('Успех:', JSON.stringify(json));
+                                        if (json.token) {
+                                            localStorage.setItem("token", JSON.stringify(json));
+                                            props.changeButton();
+                                            setEmail('');
+                                            setPassword('');
+                                            setCpassword('');
+                                            setUsername('');
+                                            setSurname('');
+                                            setGender('');
+                                            setBirthdate('');
+                                            setPhoto('');
+                                            setEmailError('');
+                                            setPasswordError('');
+                                            setCpasswordError('');
+                                            setUsernameError('');
+                                            setSurnameError('');
+                                            setGenderError('');
+                                            setBirthdateError('');
+                                            setPhotoError('');
+                                        } else {
+                                            console.error('Ошибка:');
+                                        }
+                                    } catch (error) {
+                                        console.error('Ошибка:', error);
+                                    }
+                            // } else {
+                            //     setPhotoError('The photo is empty')
+                            //     setEmailError('')
+                            //     setPasswordError('')
+                            //     setCpasswordError('')
+                            //     setUsernameError('')
+                            //     setSurnameError('')
+                            //     setGenderError('')
+                            //     setBirthdateError('')
+                            // }
                         } else {
                             setSurnameError('The surname is empty')
                             setEmailError('')
@@ -135,7 +127,6 @@ async function registration(
     }
 }
 
-
 function SignUp(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -167,9 +158,11 @@ function SignUp(props) {
     }
     function handleChangeBirthdate(event) {
         setBirthdate(event.target.value);
+        console.log(birthdate)
     }
     function handleChangePhoto(event) {
         setPhoto(event.target.value);
+        console.log(photo)
     }
 
     const [emailError, setEmailError] = useState('');
@@ -204,11 +197,17 @@ function SignUp(props) {
                     <ErrorMessage innerHTML={surnameError} />
                     <div><Input type={"text"} value={surname} func={handleChangeSurname} placeholder="Insert surname" /></div>
                     <ErrorMessage innerHTML={genderError} />
-                    <div><Input type={"text"} value={gender} func={handleChangeGender} placeholder="Select gender" /></div>
+                    <div className="select-gender">Gender:
+                        <select onChange={handleChangeGender} value={gender}>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
                     <ErrorMessage innerHTML={birthdateError} />
-                    <div><Input type={"text"} value={birthdate} func={handleChangeBirthdate} placeholder="Insert birth date" /></div>
+                    <div className="select-birthdate">Birthdate:<Input type={"date"} value={birthdate} func={handleChangeBirthdate} placeholder="Insert birth date" pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}" /></div>
                     <ErrorMessage innerHTML={photoError} />
-                    <div><Input type={"text"} value={photo} func={handleChangePhoto} placeholder="Stick a photo" /></div>
+                    <div className="select-photo">Photo:<Input type={"file"} value={photo} func={handleChangePhoto} placeholder="Stick a photo" /></div>
+                    {/* <div><Input type={"file"} placeholder="Stick a photo" /></div> */}
                     <Button innerHTML={<NavLink to="/" onClick={() => registration({    "email": email,
                                                                                         "password": password,
                                                                                         "confirmPassword": cPassword,

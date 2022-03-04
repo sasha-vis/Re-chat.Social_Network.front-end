@@ -188,11 +188,36 @@
     width: 30%;
 }
 
+.auth-form .select-gender,
+.auth-form .select-birthdate,
+.auth-form .select-photo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.auth-form .select-gender select,
+.auth-form .select-birthdate input,
+.auth-form .select-photo input {
+    width: 50% !important;
+}
+
+.auth-form .select-photo input {
+    font-size: 10px;
+}
+
 .auth-form div input {
     padding: 5px 10px;
     border: 2px solid #393646;
     width: calc(100% - 20px);
     font-size: 18px;
+}
+
+.auth-form div select {
+    padding: 5px 10px;
+    border: 2px solid #393646;
+    font-size: 18px;
+    margin-left: auto;
 }
 
 /* .auth-form div:not(:last-child) {

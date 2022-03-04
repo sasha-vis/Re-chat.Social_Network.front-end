@@ -16,6 +16,7 @@ function CommonEdit(props) {
     const [surname, setSurname] = useState(props.user.user.data.surname);
     const [gender, setGender] = useState(props.user.user.data.gender);
     const [birthdate, setBirthdate] = useState(props.user.user.data.birthdayDate);
+    const [photo, setPhoto] = useState(props.user.user.data.photo);
 
     function handleChangeName(event) {
         setName(event.target.value);
@@ -25,10 +26,12 @@ function CommonEdit(props) {
     }
     function handleChangeGender(event) {
         setGender(event.target.value);
-        console.log(gender)
     }
     function handleChangeBirthdate(event) {
         setBirthdate(event.target.value);
+    }
+    function handleChangePhoto(event) {
+        setPhoto(event.target.value);
     }
 
     useEffect(function(){
@@ -56,18 +59,19 @@ function CommonEdit(props) {
         <div className="edit-content">
             <h3>General:</h3>
             <form>
-                <div>Name:<input value={name} onChange={handleChangeName} placeholder="Name"></input></div>
-                <div>Surname:<input value={surname} onChange={handleChangeSurname} placeholder="Surname"></input></div>
+                <div>Name:<input type={"text"} value={name} onChange={handleChangeName} placeholder="Name"></input></div>
+                <div>Surname:<input type={"text"} value={surname} onChange={handleChangeSurname} placeholder="Surname"></input></div>
                 {/* <div>Gender:<input value={gender} onChange={handleChangeGender} placeholder="Gender"></input></div> */}
                 <div>Gender:
-                    <select>
-                        <option onClick={handleChangeGender} value={gender}>{gender}</option>
-                        <option onClick={handleChangeGender} value={gender === "Male" ? "Female" : "Male"}>{gender === "Male" ? "Female" : "Male"}</option>
+                    <select onChange={handleChangeGender} value={gender}>
+                        <option value={gender}>{gender}</option>
+                        <option value={gender === "Male" ? "Female" : "Male"}>{gender === "Male" ? "Female" : "Male"}</option>
                     </select>
                 </div>
-                <div>Birthdate:<input value={birthdate} onChange={handleChangeBirthdate} placeholder="Birthday date"></input></div>
+                <div>Birthdate:<input type="date" value={birthdate} onChange={handleChangeBirthdate} placeholder="Birthday date"></input></div>
+                <div>Photo:<input type="file" value={photo} onChange={handleChangePhoto} placeholder="Photo"></input></div>
                 {/* <div>Photo:<input placeholder="Фото"></input></div> */}
-                <button onClick={() => sendInfo({"name": name, "surname": surname, "gender": gender, "birthdayDate": birthdate})}>Send</button>
+                <button onClick={() => sendInfo({"name": name, "surname": surname, "gender": gender, "birthdayDate": birthdate, "photo": photo})}>Send</button>
             </form>
         </div>
     )

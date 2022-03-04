@@ -31,7 +31,12 @@
     justify-content: space-between;
     align-items: center;
     padding: 15px;
-    height: 35px;
+    height: 65px;
+    border-bottom: 1px solid #cdc9c9;
+}
+
+.messages li h5 {
+    margin-bottom: 5px;
 }
 
 .messages li:hover {

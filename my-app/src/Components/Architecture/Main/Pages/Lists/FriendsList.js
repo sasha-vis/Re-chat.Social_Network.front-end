@@ -99,7 +99,6 @@ function FriendsList(props) {
             {props.requests != 0 ?
                 (props.requests.requestsForFriendship.data.length != 0 ? 
                     <ul className="friends-list">
-                        {console.log(props.requests)}
                         <h3>Friend requests:</h3>
                     {props.requests.requestsForFriendship.data.map((item, index) =>
                         item.name.toLowerCase().includes(props.searchValue.toLowerCase()) === true || item.surname.toLowerCase().includes(props.searchValue.toLowerCase()) === true ? 
@@ -116,7 +115,6 @@ function FriendsList(props) {
             {props.friends != 0 ?
                 (props.friends.friends.data.length != 0 ? 
                     <ul className="friends-list">
-                    {console.log(props.friends)}
                         <h3>Your friends:</h3>
                     {props.friends.friends.data.map((item, index) => 
                         item.name.toLowerCase().includes(props.searchValue.toLowerCase()) === true || item.surname.toLowerCase().includes(props.searchValue.toLowerCase()) === true ?
@@ -132,7 +130,6 @@ function FriendsList(props) {
             }
             {props.users != 0 && props.user != 0 ?
                 <ul className="friends-list">
-                    {console.log(props.users)}
                     <h3>Find new friends:</h3>
                 {props.users.users.data.map((item, index) => 
                     item.name.toLowerCase().includes(props.searchValue.toLowerCase()) === true || item.surname.toLowerCase().includes(props.searchValue.toLowerCase()) === true ?

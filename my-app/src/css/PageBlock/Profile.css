@@ -279,6 +279,12 @@
     font-size: 16px;
 }
 
+.edit-content form div select {
+    padding: 5px;
+    border: 2px solid #393646;
+    font-size: 16px;
+}
+
 .edit-content form button {
     margin-top: 30px;
     padding: 5px 10px;
@@ -326,4 +332,9 @@
 
 .edit-post .close-btn:hover {
     background-color: #ca1414 !important;
+}
+
+.edit-block-email {
+    font-size: 26px;
+    color: #187cbf;
 }
