@@ -44,7 +44,7 @@ function CommonEdit(props) {
 
     async function sendInfo(data) {
         let token = JSON.parse(localStorage.getItem('token')).token;
-        const response = await fetch("https://localhost:7103/User/ChangeGeneral", {
+        const response = await fetch("https://localhost:7103/Account/ChangeGeneral", {
             method: 'PUT',
             body: JSON.stringify(data),
             headers: {

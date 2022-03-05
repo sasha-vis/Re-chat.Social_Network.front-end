@@ -82,7 +82,7 @@ function BookmarkPostsList(props) {
             }
         })
         getPostsData();
-        getFavoritePosts();
+        getBookmarkPosts()
         getUserData();
     }
 

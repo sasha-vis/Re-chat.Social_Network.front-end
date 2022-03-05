@@ -18,19 +18,19 @@ import { getUserData } from "../../../../../actions/user.action";
 
 
 
-function changeBookmarkBtn(event) {
-    let button = event.target;
+// function changeBookmarkBtn(event) {
+//     let button = event.target;
 
-    let from = button.src.search('/static'); 
-    var to = button.src.length;
-    let buttonSrc = button.src.substring(from,to);
+//     let from = button.src.search('/static'); 
+//     var to = button.src.length;
+//     let buttonSrc = button.src.substring(from,to);
 
-    if (buttonSrc === bookmarkIcon) {
-        button.src = bookmarkedIcon;
-    } else {
-        button.src = bookmarkIcon;
-    }
-}
+//     if (buttonSrc === bookmarkIcon) {
+//         button.src = bookmarkedIcon;
+//     } else {
+//         button.src = bookmarkIcon;
+//     }
+// }
 
 function openComments(event, setCommentText, setCommentErrorForNewPost) {
     setCommentText('');
@@ -86,6 +86,22 @@ function FavoritesPostsList(props) {
         getUserData();
     }
 
+    async function changeBookmarkBtn(data) {
+        console.log(data)
+        let token = JSON.parse(localStorage.getItem('token')).token;
+        const response = await fetch("https://localhost:7103/Bookmark", {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + token
+            }
+        })
+        getPostsData();
+        getFavoritePosts();
+        getUserData();
+    }
+
     function setPhoto(item) {
         let result;
         if(localStorage.getItem('user')) {
@@ -105,6 +121,29 @@ function FavoritesPostsList(props) {
             }
         } else {
             result = likeIcon
+        }
+        return result;
+    }
+
+    function setBookmarkPhoto(item) {
+        let result;
+        if(localStorage.getItem('user')) {
+            if (item.bookmarks.length != 0) {
+                item.bookmarks.forEach(function(itemBookmark, index) {
+                    let bookmarkUserId = itemBookmark.userId;
+                    let userId = JSON.parse(localStorage.getItem('user')).data.id;
+    
+                    if (bookmarkUserId === userId) {
+                        result = bookmarkedIcon
+                    } else {
+                        result = bookmarkIcon
+                    }
+                })
+            } else {
+                result = bookmarkIcon
+            }
+        } else {
+            result = bookmarkIcon
         }
         return result;
     }
@@ -163,7 +202,7 @@ function FavoritesPostsList(props) {
                                     <span>{item.comments.length}</span>
                                 </div>
                                 <div>
-                                    <Button onClick={changeBookmarkBtn} innerHTML={<img className="bookmark-icon" src={bookmarkIcon} alt="Bookmark icon"></img>} />
+                                    <Button onClick={() => changeBookmarkBtn({"postId": item.id})} innerHTML={<img className="bookmark-icon" src={setBookmarkPhoto(item)} alt="Bookmark icon"></img>} />
                                 </div>
                             </div>
                             <div className="date-post">

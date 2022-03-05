@@ -34,7 +34,7 @@ function ConfEdit(props) {
 
     async function sendInfo() {
         let token = JSON.parse(localStorage.getItem('token')).token;
-        const response = await fetch("https://localhost:7103/User/ExcludeFromSearch", {
+        const response = await fetch("https://localhost:7103/Account/ExcludeFromSearch", {
             method: 'PUT',
             headers: {
                 "Content-Type": "application/json",
