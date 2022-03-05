@@ -28,7 +28,7 @@ function Main() {
                         <Route exact path="/SignUp" element={<AuthorizedPrivateRoute><SignUp /></AuthorizedPrivateRoute>} />
                         <Route exact path="/SignIn" element={<AuthorizedPrivateRoute><SignIn /></AuthorizedPrivateRoute>} />
                         <Route exact path="/Profile" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
-                        <Route exact path="/Messenger" element={<PrivateRoute><Messenger /></PrivateRoute>} />
+                        <Route exact path="/Messenger/*" element={<PrivateRoute><Messenger /></PrivateRoute>} />
                         <Route exact path="/Friends" element={<PrivateRoute><Friends /></PrivateRoute>} />
                         <Route exact path="/Bookmarks" element={<PrivateRoute><Bookmarks /></PrivateRoute>} />
                         <Route exact path="/Favorites" element={<PrivateRoute><Favorites /></PrivateRoute>} />

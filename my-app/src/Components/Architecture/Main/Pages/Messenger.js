@@ -12,6 +12,14 @@ import sendBtn from './../../../../images/send-message.png';
 import {connect} from "react-redux";
 import { getFriendsData } from "../../../../actions/friends.action";
 
+import { NavLink } from "react-router-dom";
+
+import { Route, Routes } from 'react-router-dom';
+
+import PrivateRoute from "../../../Hoc/PrivateRoute.js";
+
+import CurrentMessagesList from "./Lists/CurrentMessagesList.js";
+
 function Messenger(props) {
     useEffect(function(){
         getFriendsData();
@@ -19,6 +27,16 @@ function Messenger(props) {
     
     async function getFriendsData() {
         props.getFriendsData()
+    }
+
+    function setClass(id) {
+        let currentId = JSON.parse(localStorage.getItem('user')).data.id;
+
+        if (currentId === id) {
+            return "my-message-content";
+        } else {
+            return "";
+        }
     }
 
     return (
@@ -35,58 +53,39 @@ function Messenger(props) {
                     <div className="messenger-left">
                         <div className="messages-list">
                             {props.friends != 0 ?
+                                props.friends.friends.data.length != 0 ?
                                 <ul className="messages">
                                     {props.friends.friends.data.map((item, index) =>
                                     <li className="message" key={index}>
-                                        {console.log(item)}
-                                        <img className="message-img" src={authorIcon} alt="User"></img>
-                                        <div className="message-item">
-                                            <h3 className="message-user-name">{item.name} {item.surname}</h3>
-                                            <div className="message-content">
-                                                <h5>{item.messages[item.messages.length - 1].userName} {item.messages[item.messages.length - 1].userSurname}</h5>
-                                                <div>{item.messages[item.messages.length - 1].messageText}  </div>  
-                                            </div>    
-                                        </div>
-                                        <img className="open-msg-btn" src={leftArrow} alt="Arrow icon"></img>    
+                                        <NavLink to={`/Messenger/${index}`}>
+                                            <img className="message-img" src={authorIcon} alt="User"></img>
+                                            <div className="message-item">
+                                                <h3 className="message-user-name">{item.name} {item.surname}</h3>
+                                                {item.messages.length != 0 ?
+                                                <div className={`message-content ${setClass(item.messages[item.messages.length - 1].authorId)}`}>
+                                                    <h5>{item.messages[item.messages.length - 1].userName} {item.messages[item.messages.length - 1].userSurname}</h5>
+                                                    <div>{item.messages[item.messages.length - 1].messageText}  </div>  
+                                                </div> : <div className="message-content no-chat">Start chat</div>   
+                                                }    
+                                            </div>
+                                            <img className="open-msg-btn" src={leftArrow} alt="Arrow icon"></img>
+                                        </NavLink>  
                                     </li>)}
-                                </ul>    
-                           : <div className="no-friends">You don't have any chats. To start chat, add new friend below</div>}
+                                </ul> :  <div className="no-friends"><NavLink to="/Friends">You don't have any chats. To start chat, add new friends</NavLink></div>   
+                           : <div className="no-friends"><NavLink to="/Friends">You don't have any chats. To start chat, add new friends</NavLink></div>}
                         </div>
                     </div>
                     <div className="messenger-right">
                         <div className="current-message-block">
-                            <div className="current-message">
-                                <div className="message-header">
-                                    <h3><span className="user-name">Konstantin</span><span className="user-surname">Bykovskih</span></h3>
-                                    <img src={authorIcon} alt="User"></img>
-                                </div>
-
-                                {/* Надо засунуть нижний мап в верхний что бы указывать индекс для нужного блока сообщений */}
-
-                                <div className="all-message-content">
-                                    {props.friends != 0 ?
-                                        <ul className="message-list">
-                                            {console.log(props.friends)}
-                                            {/* {props.friends.friends.data.messages.map((item, index) =>
-                                            <li className="current-message-item" key={index}>
-                                                <img src={authorIcon} alt="User"></img>
-                                                <div className="message-item-content">
-                                                    <h3>{item.userName}</h3>
-                                                    <p>{item.messageText}</p>
-                                                    <div className="message-date">{item.messageDate}</div>
-                                                </div>
-                                            </li>)} */}
-                                        </ul>   
-                                    : <div className="no-friends">You don't have any messages. To start chat, send new message</div>}
-                                </div>
-
-                                <div className="message-controller">
-                                    <input placeholder="Insert a message"></input>
-
-                                    <Button innerHTML={<img src={sendBtn} alt="Send icon"></img>} />
-
-                                </div>
-                            </div>
+                            {props.friends != 0 ?
+                                props.friends.friends.data.length != 0 ?
+                                <Routes>
+                                    <Route exact path="/*" element={<PrivateRoute><CurrentMessagesList friend={props.friends.friends.data[0]} /></PrivateRoute>} />
+                                     {props.friends.friends.data.map((item, index) =>
+                                        <Route exact path={`/${index}`} key={index} element={<PrivateRoute><CurrentMessagesList friend={item} /></PrivateRoute>} />
+                                    )}
+                                </Routes> : <div className="no-friends"><NavLink to="/Friends">You don't have any messages. To start chat, add new friends</NavLink></div>
+                            : <div className="no-friends"><NavLink to="/Friends">You don't have any messages. To start chat, add new friends</NavLink></div>}
                         </div>
                     </div>
                 </div>
