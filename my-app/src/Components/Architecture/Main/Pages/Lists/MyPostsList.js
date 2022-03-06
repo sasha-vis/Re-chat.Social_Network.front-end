@@ -15,60 +15,9 @@ import Input from "../../../../Common/Input";
 import EditPost from "../Edit/EditPost";
 
 import {connect} from "react-redux";
-import { deletePost } from './../../../../../actions/posts.action';
 import { getMyPostsData } from "../../../../../actions/myPosts.action";
 import { getUserData } from "../../../../../actions/user.action";
 import ErrorMessage from "../../../../Common/ErrorMessage";
-import attachBtn from './../../../../../images/attachments.png';
-
-function createPostBtn(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost) {
-    setTitle('');
-    setContent('');
-    setTitleErrorForNewPost('');
-    setContentErrorForNewPost('');
-
-    let newPost = event.target.closest('div').children[2];
-
-    newPost.classList.toggle('display-block');
-}
-
-function closePost(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost) {
-    let closeBtn = event.target.closest('.new-post');
-
-    closeBtn.classList.remove('display-block');
-    setTitle('');
-    setContent('');
-    setTitleErrorForNewPost('');
-    setContentErrorForNewPost('');
-}
-
-function changeLikeBtn(event) {
-    let button = event.target;
-
-    let from = button.src.search('/static'); 
-    var to = button.src.length;
-    let buttonSrc = button.src.substring(from,to);
-
-    if (buttonSrc === likeIcon) {
-        button.src = likedIcon;
-    } else {
-        button.src = likeIcon;
-    }
-}
-
-function changeBookmarkBtn(event) {
-    let button = event.target;
-
-    let from = button.src.search('/static'); 
-    var to = button.src.length;
-    let buttonSrc = button.src.substring(from,to);
-
-    if (buttonSrc === bookmarkIcon) {
-        button.src = bookmarkedIcon;
-    } else {
-        button.src = bookmarkIcon;
-    }
-}
 
 function openComments(event, setCommentText, setCommentErrorForNewPost, currentIndex) {
     setCommentText('');
@@ -79,41 +28,13 @@ function openComments(event, setCommentText, setCommentErrorForNewPost, currentI
     comments.classList.toggle('display-flex');
 }
 
-function openEditPost(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost) {
-    setTitle('');
-    setContent('');
-    setTitleErrorForNewPost('');
-    setContentErrorForNewPost('');
+function openEditPost(event) {
 
     let contentBlock = event.target.closest('li').children[1];
     let editBlock = event.target.closest('li').children[2];
 
     contentBlock.classList.toggle('display-none');
     editBlock.classList.toggle('display-block');
-}
-
-async function editPostConfirm(data, setTitle, setContent, props, event, setTitleErrorForNewPost, setContentErrorForNewPost) {
-    if(data.title.trim() != '') {
-        if(data.content.trim() != '') {
-            props.createPost(data)
-            setTitle('');
-            setContent('');
-            setTitleErrorForNewPost('');
-            setContentErrorForNewPost('');
-            closePost(event)
-        } else {
-            let input = event.target.closest('.new-post').children[1].children[1].children[1];
-            input.focus();
-            
-            setTitleErrorForNewPost('');
-            setContentErrorForNewPost('The content is empty');
-        }
-    } else {
-        let input = event.target.closest('.new-post').children[1].children[0].children[1];
-        input.focus();
-
-        setTitleErrorForNewPost('The title is empty');
-    }
 }
 
 function MyPostsList(props) {
@@ -129,9 +50,6 @@ function MyPostsList(props) {
     }
     async function getUserData() {
         props.getUserData()
-    }
-    async function getBookmarkPosts() {
-        props.getBookmarkPosts()
     }
 
     async function changeLikeBtn(data) {
@@ -247,19 +165,6 @@ function MyPostsList(props) {
         }
     }
 
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [titleErrorForNewPost, setTitleErrorForNewPost] = useState('');
-    const [contentErrorForNewPost, setContentErrorForNewPost] = useState('');
-
-    function handleChangeTitle(event) {
-        setTitle(event.target.value);
-    }
-    
-    function handleChangeContent(event) {
-        setContent(event.target.value);
-    }
-
     return (
         <ul className="posts-list">
             {props.myPosts != 0 ?
@@ -268,7 +173,7 @@ function MyPostsList(props) {
                         <div className="post-author">
                             <img className="author-img" src={authorIcon} alt="User"></img>
                             <h3><span>{item.userName}</span> <span>{item.userSurname}</span></h3>
-                            <Button className="edit-btn-for-post" onClick={(event) => openEditPost(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost)} innerHTML={<img className="edit-icon-for-post" src={editIcon} alt="Edit-icon" title="Edit this post"></img>} />
+                            <Button className="edit-btn-for-post" onClick={(event) => openEditPost(event)} innerHTML={<img className="edit-icon-for-post" src={editIcon} alt="Edit-icon" title="Edit this post"></img>} />
                             <Button className="close-btn" onClick={() => deleteBtn({index: item.id})} innerHTML={<img className="close-icon" src={closeIcon} alt="Close-icon" title="Delete this post"></img>} />
                         </div>
                         <div className="post-content">
@@ -328,7 +233,6 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     getUserData: () => dispatch(getUserData()),
-    deletePost: (data) => dispatch(deletePost(data)),
     getMyPostsData: () => dispatch(getMyPostsData())
 })
   

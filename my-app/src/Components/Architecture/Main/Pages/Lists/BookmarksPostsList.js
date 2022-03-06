@@ -13,24 +13,8 @@ import Input from "../../../../Common/Input";
 import ErrorMessage from "../../../../Common/ErrorMessage";
 
 import {connect} from "react-redux";
-import { getData, getFavoritePosts, getBookmarkPosts } from './../../../../../actions/posts.action';
+import { getData, getBookmarkPosts } from './../../../../../actions/posts.action';
 import { getUserData } from "../../../../../actions/user.action";
-
-
-
-// function changeBookmarkBtn(event) {
-//     let button = event.target;
-
-//     let from = button.src.search('/static'); 
-//     var to = button.src.length;
-//     let buttonSrc = button.src.substring(from,to);
-
-//     if (buttonSrc === bookmarkIcon) {
-//         button.src = bookmarkedIcon;
-//     } else {
-//         button.src = bookmarkIcon;
-//     }
-// }
 
 function openComments(event, setCommentText, setCommentErrorForNewPost) {
     setCommentText('');
@@ -40,16 +24,6 @@ function openComments(event, setCommentText, setCommentErrorForNewPost) {
 
     comments.classList.toggle('display-flex');
 }
-
-// async function getData(setData) {
-//     await fetch(`https://localhost:7103/Post`)
-//     .then((response) => {
-//     return response.json();
-//     })
-//     .then((data) => {
-//         setData(data);
-//     });
-// }
 
 function BookmarkPostsList(props) {
 

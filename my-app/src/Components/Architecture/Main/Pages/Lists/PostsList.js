@@ -15,22 +15,6 @@ import {connect} from "react-redux";
 import { getData } from './../../../../../actions/posts.action';
 import { getUserData } from "../../../../../actions/user.action";
 
-
-
-function changeBookmarkBtn(event) {
-    let button = event.target;
-
-    let from = button.src.search('/static'); 
-    var to = button.src.length;
-    let buttonSrc = button.src.substring(from,to);
-
-    if (buttonSrc === bookmarkIcon) {
-        button.src = bookmarkedIcon;
-    } else {
-        button.src = bookmarkIcon;
-    }
-}
-
 function openComments(event, setCommentText, setCommentErrorForNewPost) {
     setCommentText('');
     setCommentErrorForNewPost('');
@@ -39,16 +23,6 @@ function openComments(event, setCommentText, setCommentErrorForNewPost) {
 
     comments.classList.toggle('display-flex');
 }
-
-// async function getData(setData) {
-//     await fetch(`https://localhost:7103/Post`)
-//     .then((response) => {
-//     return response.json();
-//     })
-//     .then((data) => {
-//         setData(data);
-//     });
-// }
 
 function PostsList(props) {
 
@@ -206,6 +180,7 @@ function PostsList(props) {
                             {props.posts.posts.data[index].comments.length != 0 ?
                                 props.posts.posts.data[index].comments.map((commentItem, commentIndex) =>
                                 <li key={commentItem.id}>
+                                    {console.log(commentItem)}
                                     <div className="comment-author">
                                         <img className="comment-img" src={authorIcon} alt="User"></img>
                                         <span>{commentItem.userName} {commentItem.userSurname}</span>

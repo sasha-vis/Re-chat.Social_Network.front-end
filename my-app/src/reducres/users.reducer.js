@@ -1,6 +1,5 @@
 import { SET_USERS } from './../constants/user.constants';
 
-
 let defaultData = [];
 
 let result = (state = defaultData, action) => {

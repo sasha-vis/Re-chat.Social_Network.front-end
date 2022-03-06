@@ -1,6 +1,5 @@
 import { SET_MYPOSTS } from './../constants/myPosts.constants';
 
-
 let defaultData = [];
 
 let result = (state = defaultData, action) => {

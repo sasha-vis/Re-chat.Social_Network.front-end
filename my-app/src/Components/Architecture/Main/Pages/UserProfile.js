@@ -13,11 +13,8 @@ import authorIcon from './../../../../images/df-user-icon.png';
 import attachBtn from './../../../../images/attachments.png';
 import closeIcon from './../../../../images/close.png';
 
-import { getUserData } from './../../../../actions/user.action';
 import { getMyPostsData } from './../../../../actions/myPosts.action';
 import { getData } from './../../../../actions/posts.action';
-
-import { createPost } from "../../../../actions/posts.action.js";
 
 import {connect} from "react-redux";
 
@@ -45,51 +42,18 @@ function closePost(event, setTitle, setContent, setTitleErrorForNewPost, setCont
     closeBtn.classList.remove('display-block');
 }
 
-function openEditor(event) {
-    let userBlock = event.target.closest('.user-block').children[2];
-
-    userBlock.classList.toggle('display-block');
-}
-
 function closePopup(event) {
     let closeBtn = event.target.closest('.popup');
 
     closeBtn.classList.remove('display-block');
 }
 
-async function createPostConfirm(data, setTitle, setContent, props, event, setTitleErrorForNewPost, setContentErrorForNewPost, getMyPostsData) {
-    if(data.title.trim() != '') {
-        if(data.content.trim() != '') {
-            props.createPost(data)
-            setTitle('');
-            setContent('');
-            setTitleErrorForNewPost('');
-            setContentErrorForNewPost('');
-            closePost(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost)
-            getMyPostsData();
-        } else {
-            let input = event.target.closest('.new-post').children[1].children[1].children[1];
-            input.focus();
-            
-            setTitleErrorForNewPost('');
-            setContentErrorForNewPost('The content is empty');
-        }
-    } else {
-        let input = event.target.closest('.new-post').children[1].children[0].children[1];
-        input.focus();
 
-        setTitleErrorForNewPost('The title is empty');
-    }
-}
 
 function UserProfile(props) {
 
     const [titleErrorForNewPost, setTitleErrorForNewPost] = useState('');
     const [contentErrorForNewPost, setContentErrorForNewPost] = useState('');
-
-    // useEffect(() => {
-    //     likedPosts();
-    // }, [props.posts])
 
     useEffect(function(){
         getUserData();
@@ -118,25 +82,38 @@ function UserProfile(props) {
         setContent(event.target.value);
     }
 
-    // function likedPosts() {
-    //     let i = 0;
-
-    //     let userId = JSON.parse(localStorage.getItem('user')).data.id;
-    //     if (props.posts != 0) {
-    //         let posts = props.posts.posts.data;
+    async function createPostConfirm(dataPost, setTitle, setContent, props, event, setTitleErrorForNewPost, setContentErrorForNewPost) {
+        if(dataPost.title.trim() != '') {
+            if(dataPost.content.trim() != '') {
+                let token = JSON.parse(localStorage.getItem('token')).token;
+                let data = await fetch(`https://localhost:7103/Post`, {
+                method: 'POST',
+                body: JSON.stringify(dataPost),
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                    }
+                });
+                setTitle('');
+                setContent('');
+                setTitleErrorForNewPost('');
+                setContentErrorForNewPost('');
+                closePost(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost)
+                getMyPostsData();
+            } else {
+                let input = event.target.closest('.new-post').children[1].children[1].children[1];
+                input.focus();
+                
+                setTitleErrorForNewPost('');
+                setContentErrorForNewPost('The content is empty');
+            }
+        } else {
+            let input = event.target.closest('.new-post').children[1].children[0].children[1];
+            input.focus();
     
-    //         posts.forEach(function(item, index) {
-    //             item.likes.forEach(function(item2, index2) {
-    //                 if (userId === item2.userId) i++;
-    //             })
-    //         })
-    //     }
-    //     console.log('hi')
-
-    //     getPostsData();
-
-    //     setCount(i);
-    // }
+            setTitleErrorForNewPost('The title is empty');
+        }
+    }
 
     return (
         <div className="user-block">
@@ -194,7 +171,6 @@ function UserProfile(props) {
                             </div>
                             <div className="post-controllers">
                                 <Button className="confirm-btn" onClick={(event) => createPostConfirm({"title": title, "content": content}, setTitle, setContent, props, event, setTitleErrorForNewPost, setContentErrorForNewPost)} innerHTML="Send new post" />
-                                {/* <Button className="confirm-btn" onClick={() => createPostConfirm({title: title, content: content})} innerHTML="Send new post" /> */}
                                 <Button className="attach-btn"innerHTML={<><img src={attachBtn} alt="Attach icon"></img><Input type="file" /></>} />
                                 <Button className="close-btn" onClick={(event) => closePost(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost)} innerHTML={<img className="close-icon" src={closeIcon} alt="Close icon"></img>} />
                             </div>
@@ -242,7 +218,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
     getUserData: () => dispatch(getData()),
     getMyPostsData: () => dispatch(getMyPostsData()),
-    createPost: (data) => dispatch(createPost(data)),
     getPostsData: (data) => dispatch(getData(data))
 })
   

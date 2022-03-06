@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import authorIcon from './../../../../../images/df-user-icon.png';
 
@@ -87,10 +87,6 @@ function FriendsList(props) {
             return <Button className="sended-request" disabled="disabled" innerHTML="Request sended" />
         } else if (isFriend == 2) {
             return <Button className="sended-request" disabled="disabled" innerHTML="User sent you a request" />
-            // return (<>
-            //     <Button onClick={() => refuseRequest({"friendId": data.friendId})} className="refuse-request" innerHTML="Refuse request" />
-            //     <Button onClick={() => confirmRequest({"userId": data.friendId})} className="confirm-request" innerHTML="Confirm request" />
-            // </>)
         }
     }
 
@@ -138,8 +134,6 @@ function FriendsList(props) {
                             <h3><span className="friend-name">{item.name}</span><span className="friend-surname">{item.surname}</span></h3>
                             <div className="friend-controller">
                                 {setButton(item.isFriend, {"friendId": item.userId})}
-                                {/* <Button className="delete-friend" innerHTML="Delete" /> */}
-                                {/* <Button className="messege-friend" innerHTML="Send a messege" /> */}
                             </div>
                         </li> : '')}
                 </ul> : ''}

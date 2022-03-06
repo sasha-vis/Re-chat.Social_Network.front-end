@@ -9,7 +9,6 @@ import NavForAuth from './../Nav/Common/NavForAuth.js';
 import Button from "../../../Common/Button";
 import Input from "../../../Common/Input";
 import ErrorMessage from "../../../Common/ErrorMessage";
-// import axios from "axios";
 
 const url = 'https://localhost:7103/Account/Login';
 

@@ -11,13 +11,13 @@ html {
   scroll-behavior: smooth;
 }
 
-::-webkit-scrollbar { /* 1 - скроллбар */
+::-webkit-scrollbar {
   width: 4px;
   height: 4px;
   background-color: #fff;
 }
 
-::-webkit-scrollbar-thumb { /* 5 - ползунок */
+::-webkit-scrollbar-thumb {
   border-radius: 2px;
   background-color: #556080
 }

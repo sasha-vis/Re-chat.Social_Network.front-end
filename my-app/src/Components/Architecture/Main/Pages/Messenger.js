@@ -1,13 +1,11 @@
 import React,{ useEffect } from "react";
 
 import Nav from './../Nav/Nav.js';
-import Button from "../../../Common/Button.js";
 
 import './../../../../css/PageBlock/Messenger.css';
 
 import leftArrow from './../../../../images/left-arrow.png';
 import authorIcon from './../../../../images/df-user-icon.png';
-import sendBtn from './../../../../images/send-message.png';
 
 import {connect} from "react-redux";
 import { getFriendsData } from "../../../../actions/friends.action";

@@ -1,6 +1,5 @@
 import { SET_FAVORITEPOSTS } from './../constants/posts.constants';
 
-
 let defaultData = [];
 
 let result = (state = defaultData, action) => {

@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-// import Nav from './../Nav/Nav.js';
-// import FavoritesPostsList from './Lists/FavoritesPostsList.js';
-// import Button from "./../../../Common/Button.js";
-
-// import './../../../../css/PageBlock/Profile.css';
-
-// import closeIcon from './../../../../images/close.png';
-
 import { getFriendsData } from "../../../../../actions/friends.action";
 import {connect} from "react-redux";
 
@@ -19,25 +11,6 @@ import Input from "../../../../Common/Input";
 import sendBtn from "./../../../../../images/send-message.png";
 
 function CurrentMessagesList(props) {
-    // const [checkbox, setCheckbox] = useState(props.user.user.data.excludeFromSearch);
-
-    // function changeCheckbox(event) {
-        
-    //     if (event.target.defaultChecked === false)
-    //     {
-    //         setCheckbox(true);
-    //     } else {
-    //         setCheckbox(false);
-    //     }
-    // }
-
-    // useEffect(function(){
-    //     getUserData();
-    // }, []);
-
-    // async function getUserData() {
-    //     props.getUserData()
-    // }
 
     const [messageText, setMessageText] = useState('');
 

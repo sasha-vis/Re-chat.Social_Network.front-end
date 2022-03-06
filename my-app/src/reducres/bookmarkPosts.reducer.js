@@ -1,6 +1,5 @@
 import { SET_BOOKMARKPOSTS } from './../constants/posts.constants';
 
-
 let defaultData = [];
 
 let result = (state = defaultData, action) => {

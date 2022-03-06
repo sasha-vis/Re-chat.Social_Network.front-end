@@ -1,6 +1,5 @@
 import { SET_REQUESTS } from './../constants/friendList.constants';
 
-
 let defaultData = [];
 
 let result = (state = defaultData, action) => {

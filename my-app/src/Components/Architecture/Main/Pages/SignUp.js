@@ -47,15 +47,12 @@ async function registration(
 
                                 data.birthdayDate = `${year}-${month}-${day}`;
                             }
-                            // if(data.photo.trim() != ''){
                                 try {
                                     const response = await fetch(url, {
                                         method: 'POST',
                                         body: JSON.stringify(data),
                                         headers: {
                                             "Content-Type": "application/json"
-                                            // 'Access-Control-Allow-Origin': '*',
-                                            // 'Accept':'application/json'
                                         }
                                     });
                                     const json = await response.json();
@@ -85,16 +82,6 @@ async function registration(
                                     } catch (error) {
                                         console.error('Ошибка:', error);
                                     }
-                            // } else {
-                            //     setPhotoError('The photo is empty')
-                            //     setEmailError('')
-                            //     setPasswordError('')
-                            //     setCpasswordError('')
-                            //     setUsernameError('')
-                            //     setSurnameError('')
-                            //     setGenderError('')
-                            //     setBirthdateError('')
-                            // }
                         } else {
                             setSurnameError('The surname is empty')
                             setEmailError('')
@@ -207,7 +194,6 @@ function SignUp(props) {
                     <div className="select-birthdate">Birthdate:<Input type={"date"} value={birthdate} func={handleChangeBirthdate} placeholder="Insert birth date" pattern="[0-9]{2}-[0-9]{2}-[0-9]{4}" /></div>
                     <ErrorMessage innerHTML={photoError} />
                     <div className="select-photo">Photo:<Input type={"file"} value={photo} func={handleChangePhoto} placeholder="Stick a photo" /></div>
-                    {/* <div><Input type={"file"} placeholder="Stick a photo" /></div> */}
                     <Button innerHTML={<NavLink to="/" onClick={() => registration({    "email": email,
                                                                                         "password": password,
                                                                                         "confirmPassword": cPassword,

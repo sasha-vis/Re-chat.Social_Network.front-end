@@ -1,15 +1,6 @@
-import { GET_USER } from './../constants/user.constants';
 import { SET_USER } from './../constants/user.constants';
 
-
 let defaultData = [];
-
-// if (localStorage.getItem('isLog') === null) {
-//   defaultData = { isLog: false }
-//   localStorage.setItem('isLog', JSON.stringify(defaultData));
-// } else {
-// defaultData = { isLog: JSON.parse(localStorage.getItem('isLog')).isLog }
-// }
 
 let result = (state = defaultData, action) => {
   switch (action.type) {
@@ -19,19 +10,6 @@ let result = (state = defaultData, action) => {
             ...state,
             user: action.data
         });
-    //   case CHANGE_BUTTON:
-    //           let value;
-    //           if (localStorage.getItem('token') !== null) {
-    //             value = true;
-    //           } else {
-    //             value = false;
-    //           }
-
-    //           localStorage.setItem('isLog', JSON.stringify({ isLog: value }));
-    //           return ({
-    //             ...state,
-    //             isLog: value
-    //           });
       default:
           return state;
   }

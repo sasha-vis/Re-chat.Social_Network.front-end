@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 
 import Nav from './../Nav/Nav.js';
 import PostsList from "./Lists/PostsList.js";
@@ -11,9 +11,8 @@ import {connect} from "react-redux";
 import authorIcon from './../../../../images/df-user-icon.png';
 import attachBtn from './../../../../images/attachments.png';
 import closeIcon from './../../../../images/close.png';
-import { setData } from "../../../../actions/user.action.js";
 
-import { createPostFromMain, getData } from "../../../../actions/posts.action.js";
+import { getData } from "../../../../actions/posts.action.js";
 
 function createPostBtn(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost) {
     setTitle('');
@@ -36,50 +35,6 @@ function closePost(event, setTitle, setContent, setTitleErrorForNewPost, setCont
     setContentErrorForNewPost('');
 }
 
-const url = 'https://localhost:7103/Post';
-
-// async function sendNewPost(event, data, props, setData) {
-//     console.log(JSON.stringify(data))
-//     let token = JSON.parse(localStorage.getItem('token')).token;
-//     try {
-//         const response = await fetch(url, {
-//             method: 'POST',
-//             body: JSON.stringify(data),
-//             headers: {
-//                 "Content-Type": "application/json",
-//                 "Authorization": "Bearer " + token
-//             }})
-//         const json = await response.json();
-//         } catch (error) {
-//         console.error('Ошибка:', error);
-//         }
-// }
-
-async function createPostConfirm(data, props, event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost, getPostsData) {
-    if(data.title.trim() != '') {
-        if(data.content.trim() != '') {
-            props.createPost(data)
-            getPostsData();
-            setTitle('');
-            setContent('');
-            setTitleErrorForNewPost('');
-            setContentErrorForNewPost('');
-            closePost(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost)
-        } else {
-            let input = event.target.closest('.new-post').children[1].children[1].children[1];
-            input.focus();
-            
-            setTitleErrorForNewPost('');
-            setContentErrorForNewPost('The content is empty');
-        }
-    } else {
-        let input = event.target.closest('.new-post').children[1].children[0].children[1];
-        input.focus();
-
-        setTitleErrorForNewPost('The title is empty');
-    }
-}
-
 function Posts(props){
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -97,6 +52,40 @@ function Posts(props){
 
     async function getPostsData() {
         props.getData()
+    }
+
+    async function createPostConfirm(dataPost, props, event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost) {
+        if(dataPost.title.trim() != '') {
+            if(dataPost.content.trim() != '') {
+                let token = JSON.parse(localStorage.getItem('token')).token;
+                    let data = await fetch(`https://localhost:7103/Post`, {
+                    method: 'POST',
+                    body: JSON.stringify(dataPost),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                        }
+                    });
+                getPostsData();
+                setTitle('');
+                setContent('');
+                setTitleErrorForNewPost('');
+                setContentErrorForNewPost('');
+                closePost(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost)
+                getPostsData();
+            } else {
+                let input = event.target.closest('.new-post').children[1].children[1].children[1];
+                input.focus();
+                
+                setTitleErrorForNewPost('');
+                setContentErrorForNewPost('The content is empty');
+            }
+        } else {
+            let input = event.target.closest('.new-post').children[1].children[0].children[1];
+            input.focus();
+    
+            setTitleErrorForNewPost('The title is empty');
+        }
     }
     return (
         <div className="posts-block">
@@ -127,7 +116,7 @@ function Posts(props){
                             </div>
                         </div>
                         <div className="post-controllers">
-                            <Button onClick={(event) => createPostConfirm({"title": title, "content": content}, props, event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost, getPostsData)} className="confirm-btn" innerHTML="Send new post" />
+                            <Button onClick={(event) => createPostConfirm({"title": title, "content": content}, props, event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost)} className="confirm-btn" innerHTML="Send new post" />
                             <Button className="attach-btn" innerHTML={<><img src={attachBtn} alt="Attach icon"></img><Input type="file" /></>} />
                             <Button className="close-btn" onClick={closePost} innerHTML={<img className="close-icon" src={closeIcon} alt="Close icon"></img>} />
                         </div>
@@ -148,7 +137,6 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    createPost: (data) => dispatch(createPostFromMain(data)),
     getData: () => dispatch(getData())
 })
 
