@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { NavLink } from "react-router-dom";
 
 import authorIcon from './../../../../../images/df-user-icon.png';
 
@@ -119,7 +120,7 @@ function FriendsList(props) {
                                 <h3><span className="friend-name">{item.name}</span><span className="friend-surname">{item.surname}</span></h3>
                                 <div className="friend-controller">
                                     <Button onClick={() => refuseRequest({"friendId": item.friendId})} className="refuse-request" innerHTML="Delete friend" />
-                                    <Button onClick={() => confirmRequest({"userId": item.userId})} className="send-message" innerHTML="Send a message" />
+                                    <Button className="send-message" innerHTML={<NavLink to={`/Messenger/${index}`}>Send a message</NavLink>} />
                                 </div>
                             </li> : '')}
                 </ul> : <div className="no-friends">You don't have any friend. To start chat, add new friend below</div>) : ''

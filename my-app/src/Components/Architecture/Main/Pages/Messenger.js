@@ -61,7 +61,7 @@ function Messenger(props) {
                                                 <h3 className="message-user-name">{item.name} {item.surname}</h3>
                                                 {item.messages.length != 0 ?
                                                 <div className={`message-content ${setClass(item.messages[item.messages.length - 1].authorId)}`}>
-                                                    <h5>{item.messages[item.messages.length - 1].userName} {item.messages[item.messages.length - 1].userSurname}</h5>
+                                                    <h5>{item.messages[item.messages.length - 1].authorId === JSON.parse(localStorage.getItem('user')).data.id ? "You:" : `${item.messages[item.messages.length - 1].userName}:`}</h5>
                                                     <div>{item.messages[item.messages.length - 1].messageText}  </div>  
                                                 </div> : <div className="message-content no-chat">Start chat</div>   
                                                 }    
@@ -94,6 +94,7 @@ function Messenger(props) {
 }
 
 const mapStateToProps = (state) => ({
+    user: state.user,
     friends: state.friends
 })
 
