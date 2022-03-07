@@ -2,7 +2,6 @@ import React from "react";
 import { NavLink } from 'react-router-dom';
 
 import {connect} from "react-redux";
-import { changeButton } from '../../../../../actions/isLog.action';
 
 import profileLogo from './../../../../../images/profile.png';
 import homeLogo from './../../../../../images/home.png';
@@ -12,12 +11,13 @@ import bookmarkLogo from './../../../../../images/bookmark-icon.png';
 import likeLogo from './../../../../../images/heart-icon.png';
 import exitLogo from './../../../../../images/log-out.png';
 
-function exitAccount(props) {
-    if(localStorage.getItem('token')) localStorage.removeItem('token');
-    props.changeButton();
-}
+import { exitAccount } from "../../../../../actions/user.action";
 
 function NavIfAuth(props) {
+
+    function exitAccount(props) {
+        props.exitAccount();
+    }
     return (
         <ul className="nav-list">
             <li><NavLink to="/Profile"><img className='sign-in-logo' src={profileLogo} alt="profile icon"></img><h3 className='sign-in-title'>My Profile</h3></NavLink></li>
@@ -32,11 +32,11 @@ function NavIfAuth(props) {
 }
 
 const mapStateToProps = (state) => ({
-    isLog: state.isLog
+    user: state.user
 })
   
 const mapDispatchToProps = (dispatch) => ({
-    changeButton: (data) => dispatch(changeButton(data))
+    exitAccount: () => dispatch(exitAccount())
 })
   
 export default connect(mapStateToProps, mapDispatchToProps)(NavIfAuth);

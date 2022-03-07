@@ -1,5 +1,4 @@
 import React from "react";
-import {connect} from "react-redux";
 
 import HeaderIfNotAuth from "./Common/HeaderIfNotAuth.js";
 import HeaderIfAuth from "./Common/HeaderIfAuth.js";
@@ -7,7 +6,7 @@ import HeaderIfAuth from "./Common/HeaderIfAuth.js";
 import logo from './../../../images/logo2.png';
 import './../../../css/Header/Header.css';
 
-function Header(props) {
+function Header() {
     return (
         <header className="header">
             <div className="container">
@@ -16,7 +15,7 @@ function Header(props) {
                         <img className='logo' src={logo} alt="logo icon"></img>
                     </div>
 
-                    {props.isLog.isLog !== true ? <HeaderIfNotAuth /> : <HeaderIfAuth />}
+                    {!localStorage.getItem('token') ? <HeaderIfNotAuth /> : <HeaderIfAuth />}
                     
                 </div>
             </div>
@@ -24,8 +23,4 @@ function Header(props) {
     )
 }
 
-const mapStateToProps = (state) => ({
-    isLog: state.isLog
-})
-
-export default connect(mapStateToProps)(Header);
+export default Header;

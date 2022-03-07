@@ -8,6 +8,8 @@ import Header from './Components/Architecture/Header/Header.js';
 import Main from './Components/Architecture/Main/Main.js';
 import Footer from './Components/Architecture/Footer/Footer.js';
 
+import AppWrapper from './AppWrapper';
+
 import './App.css';
 
 function App() {
@@ -16,9 +18,7 @@ function App() {
 			<BrowserRouter>
 				<Provider store={store}>
 
-					<Header />
-					<Main />
-					<Footer />
+					<AppWrapper />
 
 				</Provider>
 			</BrowserRouter>

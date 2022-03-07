@@ -35,7 +35,6 @@ function FriendsList(props) {
     }
 
     async function sendRequest(data) {
-        console.log(JSON.stringify(data))
         let token = JSON.parse(localStorage.getItem('token')).token;
         const response = await fetch("https://localhost:7103/Friend", {
             method: 'POST',
@@ -49,7 +48,6 @@ function FriendsList(props) {
         getRequestsData();
     }
     async function confirmRequest(data) {
-        console.log(JSON.stringify(data))
         let token = JSON.parse(localStorage.getItem('token')).token;
         const response = await fetch("https://localhost:7103/Friend/ResponseToRequestFriend", {
             method: 'PUT',

@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { NavLink } from "react-router-dom";
 
 import {connect} from "react-redux";
-import { changeButton } from './../../../../actions/isLog.action';
+import { getUserData } from './../../../../actions/user.action';
 
 import NavForAuth from "./../Nav/Common/NavForAuth.js";
 import Button from "../../../Common/Button";
@@ -45,7 +45,7 @@ async function registration(
                                 let month = now.substring(3, 5);
                                 let day = now.substring(0, 2);
 
-                                data.birthdayDate = `${year}-${month}-${day}`;
+                                data.birthdayDate = `${year-18}-${month}-${day}`;
                             }
                                 try {
                                     const response = await fetch(url, {
@@ -59,7 +59,7 @@ async function registration(
                                     console.log('Успех:', JSON.stringify(json));
                                         if (json.token) {
                                             localStorage.setItem("token", JSON.stringify(json));
-                                            props.changeButton();
+                                            props.getUserData();
                                             setEmail('');
                                             setPassword('');
                                             setCpassword('');
@@ -78,6 +78,7 @@ async function registration(
                                             setPhotoError('');
                                         } else {
                                             console.error('Ошибка:');
+                                            alert(json.message)
                                         }
                                     } catch (error) {
                                         console.error('Ошибка:', error);
@@ -174,15 +175,15 @@ function SignUp(props) {
 
                 <form className="auth-form">
                     <ErrorMessage innerHTML={emailError} />
-                    <div><Input type={"email"} value={email} func={handleChangeEmail} placeholder="Insert email" /></div>
+                    <div><Input type={"email"} value={email} func={handleChangeEmail} placeholder="Insert email" required="required" /></div>
                     <ErrorMessage innerHTML={passwordError} />
-                    <div><Input type={"password"} value={password} func={handleChangePassword} placeholder="Insert password" /></div>
+                    <div><Input type={"password"} value={password} func={handleChangePassword} placeholder="Insert password" required="required" /></div>
                     <ErrorMessage innerHTML={cPasswordError} />
-                    <div><Input type={"password"} value={cPassword} func={handleChangeCpassword} placeholder="Confirm password" /></div>
+                    <div><Input type={"password"} value={cPassword} func={handleChangeCpassword} placeholder="Confirm password" required="required" /></div>
                     <ErrorMessage innerHTML={usernameError} />
-                    <div><Input type={"text"} value={username} func={handleChangeName} placeholder="Insert name" /></div>
+                    <div><Input type={"text"} value={username} func={handleChangeName} placeholder="Insert name" required="required" /></div>
                     <ErrorMessage innerHTML={surnameError} />
-                    <div><Input type={"text"} value={surname} func={handleChangeSurname} placeholder="Insert surname" /></div>
+                    <div><Input type={"text"} value={surname} func={handleChangeSurname} placeholder="Insert surname" required="required" /></div>
                     <ErrorMessage innerHTML={genderError} />
                     <div className="select-gender">Gender:
                         <select onChange={handleChangeGender} value={gender}>
@@ -227,11 +228,11 @@ function SignUp(props) {
 }
 
 const mapStateToProps = (state) => ({
-    isLog: state.isLog
+    user: state.user
 })
   
 const mapDispatchToProps = (dispatch) => ({
-    changeButton: (data) => dispatch(changeButton(data))
+    getUserData: () => dispatch(getUserData())
 })
   
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

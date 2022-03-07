@@ -41,6 +41,9 @@ function MyPostsList(props) {
 
     const [commentErrorForNewPost, setCommentErrorForNewPost] = useState('');
 
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+
     useEffect(function(){
         getMyPostsData();
     }, []);
@@ -97,17 +100,22 @@ function MyPostsList(props) {
 
     function setPhoto(item) {
         let result;
-        if (item.likes.length != 0) {
-            item.likes.forEach(function(itemLike, index) {
-                let likeUserId = itemLike.userId;
-                let userId = JSON.parse(localStorage.getItem('user')).data.id;
 
-                if (likeUserId === userId) {
-                    result = likedIcon
-                } else {
-                    result = likeIcon
-                }
-            })
+        if (localStorage.getItem('token') && props.user != 0) {
+            if (item.likes.length != 0) {
+                item.likes.forEach(function(itemLike, index) {
+                    let likeUserId = itemLike.userId;
+                    let userId = props.user.user.data.id;
+    
+                    if (likeUserId === userId) {
+                        result = likedIcon
+                    } else {
+                        result = likeIcon
+                    }
+                })
+            } else {
+                result = likeIcon
+            }
         } else {
             result = likeIcon
         }
@@ -116,11 +124,12 @@ function MyPostsList(props) {
 
     function setBookmarkPhoto(item) {
         let result;
-        if(localStorage.getItem('user')) {
+
+        if(localStorage.getItem('token') && props.user != 0) {
             if (item.bookmarks.length != 0) {
                 item.bookmarks.forEach(function(itemBookmark, index) {
                     let bookmarkUserId = itemBookmark.userId;
-                    let userId = JSON.parse(localStorage.getItem('user')).data.id;
+                    let userId = props.user.user.data.id;
     
                     if (bookmarkUserId === userId) {
                         result = bookmarkedIcon
@@ -197,7 +206,7 @@ function MyPostsList(props) {
                             </ul>
                             <div className="comments-controllers">
                                 <ErrorMessage innerHTML={commentErrorForNewPost} />
-                                <Input type={"text"} value={commentText} func={handleChangeComment} placeholder="Insert comment" />
+                                <Input type={"text"} value={commentText} func={handleChangeComment} placeholder="Insert comment" required="required" />
                                 <Button onClick={(event) => sendNewComment({"postId": item.id, "commentText": commentText}, event)} innerHTML="Send" />
                             </div>
                         </div>
@@ -227,7 +236,6 @@ function MyPostsList(props) {
 
 const mapStateToProps = (state) => ({
     user: state.user,
-    isLog: state.isLog,
     myPosts: state.myPosts
 })
 

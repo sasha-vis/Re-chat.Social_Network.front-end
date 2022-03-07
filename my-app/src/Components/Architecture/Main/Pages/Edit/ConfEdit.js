@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from "react";
 
-// import Nav from './../Nav/Nav.js';
-// import FavoritesPostsList from './Lists/FavoritesPostsList.js';
-// import Button from "./../../../Common/Button.js";
-
-// import './../../../../css/PageBlock/Profile.css';
-
-// import closeIcon from './../../../../images/close.png';
-
 import {getUserData} from "./../../../../../actions/user.action";
 import {connect} from "react-redux";
+import Button from "../../../../Common/Button";
 
 function ConfEdit(props) {
     const [checkbox, setCheckbox] = useState(props.user.user.data.excludeFromSearch);
@@ -49,7 +42,7 @@ function ConfEdit(props) {
             <h3>Confidential:</h3>
             <form>
                 <div>Hide from search:<input type="checkbox" defaultChecked={checkbox} onClick={(event) => changeCheckbox(event)} className="checkbox"></input></div>
-                <button onClick={() => sendInfo()}>Send</button>
+                <Button onClick={() => sendInfo()} innerHTML="Send" />
             </form>
         </div>
     )

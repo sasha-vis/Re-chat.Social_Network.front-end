@@ -1,17 +1,12 @@
 import React from 'react'
 import {useLocation, Navigate} from "react-router-dom";
-import { connect } from 'react-redux'
 
-function PrivateRoute({ children, isLog }) {
+function PrivateRoute({ children }) {
   const location = useLocation();
-  if (isLog.isLog === false) {
+  if (!localStorage.getItem('token')) {
     return <Navigate to="/SignIn" state={{from: location}} replace />;
   }
   return children;
 }
 
-const mapStateToProps = state => ({
-  isLog: state.isLog
-})
-
-export default connect(mapStateToProps)(PrivateRoute)
+export default PrivateRoute;

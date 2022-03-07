@@ -1,28 +1,17 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { NavLink } from 'react-router-dom';
 
 import {connect} from "react-redux";
-import { changeButton } from './../../../../actions/isLog.action';
+import { exitAccount } from './../../../../actions/user.action';
 
 import userIcon from './../../../../images/df-user-icon.png';
 
 import Button from "../../../Common/Button";
 
-import { getUserData } from './../../../../actions/user.action';
-
-function exitAccount(props) {
-    if(localStorage.getItem('token')) localStorage.removeItem('token');
-    props.changeButton();
-}
-
 function HeaderIfAuth(props) {
 
-    useEffect(function(){
-        getUserData();
-    }, []);
-
-    async function getUserData() {
-        props.getUserData()
+    function exitAccount(props) {
+        props.exitAccount();
     }
 
     return (
@@ -35,13 +24,11 @@ function HeaderIfAuth(props) {
 }
 
 const mapStateToProps = (state) => ({
-    isLog: state.isLog,
     user: state.user
 })
   
 const mapDispatchToProps = (dispatch) => ({
-    changeButton: (data) => dispatch(changeButton(data)),
-    getUserData: () => dispatch(getUserData())
+    exitAccount: () => dispatch(exitAccount())
 })
   
 export default connect(mapStateToProps, mapDispatchToProps)(HeaderIfAuth);

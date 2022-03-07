@@ -1,6 +1,5 @@
 import {combineReducers, createStore, applyMiddleware} from "redux";
 
-import isLog from "./../reducres/isLog.reducer";
 import user from "./../reducres/user.reducer";
 import users from "./../reducres/users.reducer";
 import posts from "./../reducres/posts.reducer";
@@ -13,7 +12,6 @@ import friends from "./../reducres/friends.reducer";
 import thunk from 'redux-thunk'
 
 export const rootReducer = combineReducers({
-  isLog: isLog,
   user: user,
   posts,
   myPosts,

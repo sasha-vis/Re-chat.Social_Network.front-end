@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import Button from "../../../../Common/Button";
 import Input from "../../../../Common/Input";
@@ -23,29 +23,41 @@ function EditPost(props) {
         setContent(event.target.value);
     }
 
-    useEffect(function(){
-        getMyPostsData();
-    }, []);
-
     async function getMyPostsData() {
         props.getMyPostsData()
     }
 
-    async function editPostConfirm(data, openEditPost, event) {
-        let token = JSON.parse(localStorage.getItem('token')).token;
-        const response = await fetch("https://localhost:7103/Post", {
-            method: 'PUT',
-            body: JSON.stringify(data),
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token
+    async function editPostConfirm(dataPost, openEditPost, event) {
+
+        if(dataPost.title.trim() != '') {
+            if(dataPost.content.trim() != '') {
+                let token = JSON.parse(localStorage.getItem('token')).token;
+                const response = await fetch("https://localhost:7103/Post", {
+                    method: 'PUT',
+                    body: JSON.stringify(dataPost),
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    }
+                })
+                openEditPost(event, setTitleErrorForEditPost, setContentErrorForEditPost)
+                getMyPostsData();
+            } else {
+                let input = event.target.closest('.edit-post').children[0].children[1].children[1];
+                input.focus();
+                
+                setTitleErrorForEditPost('');
+                setContentErrorForEditPost('The content is empty');
             }
-        })
-        openEditPost(event, setTitleErrorForEditPost, setContentErrorForEditPost)
-        getMyPostsData();
+        } else {
+            let input = event.target.closest('.edit-post').children[0].children[0].children[1];
+            input.focus();
+    
+            setTitleErrorForEditPost('The title is empty');
+        }
     }
 
-    async function openEditPost(event, setTitleErrorForEditPost, setContentErrorForEditPost, getMyPostsData) {
+    async function openEditPost(event, setTitleErrorForEditPost, setContentErrorForEditPost) {
         setTitleErrorForEditPost('');
         setContentErrorForEditPost('');
     
@@ -54,16 +66,6 @@ function EditPost(props) {
     
         contentBlock.classList.toggle('display-none');
         editBlock.classList.toggle('display-block');
-
-        let token = JSON.parse(localStorage.getItem('token')).token;
-
-        const response = await fetch("https://localhost:7103/Post", {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + token
-            }
-        })
     
         getMyPostsData();
     }
@@ -77,13 +79,13 @@ function EditPost(props) {
                 </div>
                 <div className="content">
                     <ErrorMessage innerHTML={contentErrorForEditPost} />
-                    <textarea type="text" value={content} onChange={handleChangeContent}></textarea>
+                    <textarea type="text" value={content} onChange={handleChangeContent} required="required" ></textarea>
                 </div>
             </div>
             <div className="post-controllers">
                 <Button className="confirm-btn" onClick={(event) => editPostConfirm({"id": props.id, "title": title, "content": content}, openEditPost, event)} innerHTML="Confirm edition" />
                 <Button className="attach-btn"innerHTML={<><img src={attachBtn} alt="Attach icon"></img><Input type="file" /></>} />
-                <Button className="close-btn" onClick={(event) => openEditPost(event, setTitleErrorForEditPost, setContentErrorForEditPost, getMyPostsData)} innerHTML="Cancel" />
+                <Button className="close-btn" onClick={(event) => openEditPost(event, setTitleErrorForEditPost, setContentErrorForEditPost)} innerHTML="Cancel" />
             </div>
         </div>
     )

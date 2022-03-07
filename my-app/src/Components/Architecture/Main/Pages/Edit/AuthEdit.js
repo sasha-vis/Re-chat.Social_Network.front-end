@@ -3,6 +3,9 @@ import React, {useState, useEffect} from "react";
 import {getUserData} from "./../../../../../actions/user.action";
 import {connect} from "react-redux";
 
+import Input from "../../../../Common/Input";
+import Button from "../../../../Common/Button";
+
 function AuthEdit(props) {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -51,10 +54,10 @@ function AuthEdit(props) {
             <h3>Authentication:</h3>
             <form>
                 <div className="edit-block-email">{props.user.user.data.email}</div>
-                <div>Old password:<input type={"text"} value={oldPassword} onChange={handleChangeOldPassword} placeholder="Old password"></input></div>
-                <div>New password:<input type={"text"} value={newPassword} onChange={handleChangeNewPassword} placeholder="New password"></input></div>
-                <div>Confirm new password:<input type={"text"} value={confirmNewPassword} onChange={handleChangeConfirmNewPassword} placeholder="Confirm new password"></input></div>
-                <button onClick={() => sendInfo({"oldPassword": oldPassword, "newPassword": newPassword, "confirmNewPassword": confirmNewPassword})}>Send</button>
+                <div>Old password:<Input type={"text"} value={oldPassword} func={handleChangeOldPassword} placeholder="Old password" required="required" /></div>
+                <div>New password:<Input type={"text"} value={newPassword} func={handleChangeNewPassword} placeholder="New password" required="required" /></div>
+                <div>Confirm new password:<Input type={"text"} value={confirmNewPassword} onChange={handleChangeConfirmNewPassword} placeholder="Confirm new password" required="required" /></div>
+                <Button onClick={() => sendInfo({"oldPassword": oldPassword, "newPassword": newPassword, "confirmNewPassword": confirmNewPassword})} innerHTML="Send" />
             </form>
         </div>
     )

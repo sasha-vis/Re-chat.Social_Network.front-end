@@ -101,6 +101,12 @@
 
 .friend-controller .send-message {
     background-color: #cdc024;
+    padding: 0 !important;
+}
+
+.friend-controller .send-message a {
+    display: block;
+    padding: 5px 0;
 }
 
 .friend-controller .send-message:hover {

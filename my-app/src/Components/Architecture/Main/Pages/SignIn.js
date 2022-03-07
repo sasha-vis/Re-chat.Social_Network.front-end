@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import { NavLink } from "react-router-dom";
 
 import {connect} from "react-redux";
-import { changeButton } from './../../../../actions/isLog.action';
 import { getUserData } from './../../../../actions/user.action';
 
 import NavForAuth from './../Nav/Common/NavForAuth.js';
@@ -26,7 +25,6 @@ async function login(data, props, setEmailError, setPasswordError, setEmail, set
             const json = await response.json();
             if (json.token) {
                 localStorage.setItem("token", JSON.stringify(json));
-                props.changeButton();
                 props.getUserData();
                 setEmail('');
                 setPassword('');
@@ -34,6 +32,7 @@ async function login(data, props, setEmailError, setPasswordError, setEmail, set
                 setPasswordError('');
             } else {
                 console.error('Ошибка:');
+                alert(json.message)
             }
             } catch (error) {
             console.error('Ошибка:', error);
@@ -76,9 +75,9 @@ function SignIn(props) {
 
                 <form className="auth-form">
                     <ErrorMessage innerHTML={emailError} />
-                    <div><Input type={"email"} value={email} func={handleChangeEmail} placeholder="Insert email" /></div>
+                    <div><Input type={"email"} value={email} func={handleChangeEmail} placeholder="Insert email" required="required" /></div>
                     <ErrorMessage innerHTML={passwordError} />
-                    <div><Input type={"password"} value={password} func={handleChangePassword} placeholder="Insert password" /></div>
+                    <div><Input type={"password"} value={password} func={handleChangePassword} placeholder="Insert password" required="required" /></div>
                     <Button onClick={() => login({"email": email, "password": password}, props, setEmailError, setPasswordError, setEmail, setPassword)} innerHTML={<NavLink to="/">Sign in</NavLink>} />
                 </form>
 
@@ -88,11 +87,10 @@ function SignIn(props) {
 }
 
 const mapStateToProps = (state) => ({
-    isLog: state.isLog
+    user: state.user
 })
   
 const mapDispatchToProps = (dispatch) => ({
-    changeButton: (data) => dispatch(changeButton(data)),
     getUserData: () => dispatch(getUserData())
 })
   

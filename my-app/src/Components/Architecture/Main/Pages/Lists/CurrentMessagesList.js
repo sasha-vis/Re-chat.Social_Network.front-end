@@ -41,10 +41,12 @@ function CurrentMessagesList(props) {
     }
 
     function setClass(id) {
-        let currentId = JSON.parse(localStorage.getItem('user')).data.id;
-
-        if (currentId === id) {
-            return "my-message";
+        if (props.user != 0) {
+            if (props.user.user.data.id === id) {
+                return "my-message";
+            } else {
+                return "";
+            }
         } else {
             return "";
         }
@@ -92,6 +94,7 @@ function CurrentMessagesList(props) {
 }
 
 const mapStateToProps = (state) => ({
+    user: state.user,
     friends: state.friends
 })
 

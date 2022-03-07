@@ -78,11 +78,11 @@ function FavoritesPostsList(props) {
 
     function setPhoto(item) {
         let result;
-        if(localStorage.getItem('user')) {
+        if(localStorage.getItem('token') && props.user != 0) {
             if (item.likes.length != 0) {
                 item.likes.forEach(function(itemLike, index) {
                     let likeUserId = itemLike.userId;
-                    let userId = JSON.parse(localStorage.getItem('user')).data.id;
+                    let userId = props.user.user.data.id;
     
                     if (likeUserId === userId) {
                         result = likedIcon
@@ -101,11 +101,11 @@ function FavoritesPostsList(props) {
 
     function setBookmarkPhoto(item) {
         let result;
-        if(localStorage.getItem('user')) {
+        if(localStorage.getItem('token') && props.user != 0) {
             if (item.bookmarks.length != 0) {
                 item.bookmarks.forEach(function(itemBookmark, index) {
                     let bookmarkUserId = itemBookmark.userId;
-                    let userId = JSON.parse(localStorage.getItem('user')).data.id;
+                    let userId = props.user.user.data.id;
     
                     if (bookmarkUserId === userId) {
                         result = bookmarkedIcon
@@ -188,7 +188,6 @@ function FavoritesPostsList(props) {
                             {props.favoritePosts.favoritePosts.data[index].comments.length != 0 ?
                                 props.favoritePosts.favoritePosts.data[index].comments.map((commentItem, commentIndex) =>
                                 <li key={commentItem.id}>
-                                    {console.log(commentItem)}
                                     <div className="comment-author">
                                         <img className="comment-img" src={authorIcon} alt="User"></img>
                                         <span>{commentItem.userName} {commentItem.userSurname}</span>
@@ -200,7 +199,7 @@ function FavoritesPostsList(props) {
                             </ul>
                             <div className="comments-controllers">
                                 <ErrorMessage innerHTML={commentErrorForNewPost} />
-                                <Input type={"text"} value={commentText} func={handleChangeComment} placeholder="Insert comment" />
+                                <Input type={"text"} value={commentText} func={handleChangeComment} placeholder="Insert comment" required="required" />
                                 <Button onClick={(event) => sendNewComment({"postId": item.id, "commentText": commentText}, event)} innerHTML="Send" />
                             </div>
                         </div>

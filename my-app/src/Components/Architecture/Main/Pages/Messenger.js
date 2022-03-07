@@ -28,7 +28,7 @@ function Messenger(props) {
     }
 
     function setClass(id) {
-        let currentId = JSON.parse(localStorage.getItem('user')).data.id;
+        let currentId = props.user.user.data.id;
 
         if (currentId === id) {
             return "my-message-content";
@@ -50,7 +50,7 @@ function Messenger(props) {
                 <div className="messenger">
                     <div className="messenger-left">
                         <div className="messages-list">
-                            {props.friends != 0 ?
+                            {props.friends != 0 && props.user != 0 ?
                                 props.friends.friends.data.length != 0 ?
                                 <ul className="messages">
                                     {props.friends.friends.data.map((item, index) =>
@@ -61,7 +61,7 @@ function Messenger(props) {
                                                 <h3 className="message-user-name">{item.name} {item.surname}</h3>
                                                 {item.messages.length != 0 ?
                                                 <div className={`message-content ${setClass(item.messages[item.messages.length - 1].authorId)}`}>
-                                                    <h5>{item.messages[item.messages.length - 1].authorId === JSON.parse(localStorage.getItem('user')).data.id ? "You:" : `${item.messages[item.messages.length - 1].userName}:`}</h5>
+                                                    <h5>{item.messages[item.messages.length - 1].authorId === props.user.user.data.id ? "You:" : `${item.messages[item.messages.length - 1].userName}:`}</h5>
                                                     <div>{item.messages[item.messages.length - 1].messageText}  </div>  
                                                 </div> : <div className="message-content no-chat">Start chat</div>   
                                                 }    

@@ -96,23 +96,23 @@ function Posts(props){
                 <div className='title-wrapper'>
                     <h1>Posts line</h1>
 
-                    {props.isLog.isLog !== true ? <h3>If you want to create any post, you need to be authorized</h3> : <button onClick={(event) => createPostBtn(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost)} className="create-post">Create post</button>}
+                    {!localStorage.getItem('token') ? <h3>If you want to create any post, you need to be authorized</h3> : <button onClick={(event) => createPostBtn(event, setTitle, setContent, setTitleErrorForNewPost, setContentErrorForNewPost)} className="create-post">Create post</button>}
                     
                     <div className="new-post">
                         <div className="post-author">
                             <img className="author-img" src={authorIcon} alt="User"></img>
                             <h3>
-                                {props.user != 0 ? `${props.user.user.data.name} ${props.user.user.data.surname}` : ''}
+                                {localStorage.getItem('token') && props.user != 0 && props.user.length != undefined ? `${props.user.user.data.name} ${props.user.user.data.surname}` : ''}
                             </h3>
                         </div>
                         <div className="post-content">
                             <div className="title-name">
                                 <ErrorMessage innerHTML={titleErrorForNewPost} />
-                                <Input type={"text"} value={title} func={handleChangeTitle} placeholder="Insert title" />
+                                <Input type={"text"} value={title} func={handleChangeTitle} placeholder="Insert title" required="required" />
                             </div>
                             <div className="content">
                                 <ErrorMessage innerHTML={contentErrorForNewPost} />
-                                <textarea type="text" value={content} onChange={handleChangeContent}></textarea>
+                                <textarea type="text" value={content} onChange={handleChangeContent} required="required"></textarea>
                             </div>
                         </div>
                         <div className="post-controllers">
@@ -131,7 +131,6 @@ function Posts(props){
 }
 
 const mapStateToProps = (state) => ({
-    isLog: state.isLog,
     user: state.user,
     posts: state.posts
 })
