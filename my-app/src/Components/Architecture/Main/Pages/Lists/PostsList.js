@@ -28,9 +28,8 @@ function PostsList(props) {
 
     const [commentErrorForNewPost, setCommentErrorForNewPost] = useState('');
 
-    const [userId, setUserId] = useState('');
-
     useEffect(function(){
+        getUserData();
         getPostsData();
     }, []);
 
@@ -71,9 +70,8 @@ function PostsList(props) {
 
     function setPhoto(item) {
         let result;
-
-        if(localStorage.getItem('token') && props.user != 0 && props.user.length != undefined) {
-            if (item.likes.length != 0) {
+        if(localStorage.getItem('token')) {
+            if (item.likes.length != 0 && props.user != 0) {
                 item.likes.forEach(function(itemLike, index) {
                     let likeUserId = itemLike.userId;
                     let userId = props.user.user.data.id;
@@ -191,11 +189,14 @@ function PostsList(props) {
                                 </li>
                             ) : <li>There is no any comment</li>}
                             </ul>
-                            <div className="comments-controllers">
-                                <ErrorMessage innerHTML={commentErrorForNewPost} />
-                                <Input type={"text"} value={commentText} func={handleChangeComment} placeholder="Insert comment" required="required" />
-                                <Button onClick={(event) => sendNewComment({"postId": item.id, "commentText": commentText}, event)} innerHTML="Send" />
-                            </div>
+                            {localStorage.getItem('token') ?
+                                <div className="comments-controllers">
+                                    <ErrorMessage innerHTML={commentErrorForNewPost} />
+                                    <Input type={"text"} value={commentText} func={handleChangeComment} placeholder="Insert comment" required="required" />
+                                    <Button onClick={(event) => sendNewComment({"postId": item.id, "commentText": commentText}, event)} innerHTML="Send" />
+                                </div>
+                                : <div className="no-comment-controller">If you want to leave comments, you need to be authorized</div>
+                            }
                         </div>
                     </li>
                 ) : ''}

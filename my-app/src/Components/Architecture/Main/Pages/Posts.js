@@ -102,7 +102,7 @@ function Posts(props){
                         <div className="post-author">
                             <img className="author-img" src={authorIcon} alt="User"></img>
                             <h3>
-                                {localStorage.getItem('token') && props.user != 0 && props.user.length != undefined ? `${props.user.user.data.name} ${props.user.user.data.surname}` : ''}
+                                {localStorage.getItem('token') && props.user != 0 ? `${props.user.user.data.name} ${props.user.user.data.surname}` : ''}
                             </h3>
                         </div>
                         <div className="post-content">
@@ -123,7 +123,7 @@ function Posts(props){
                     </div>
                 </div>
                 
-                <PostsList />
+                <PostsList userId={props.userId} />
 
             </main>
         </div>

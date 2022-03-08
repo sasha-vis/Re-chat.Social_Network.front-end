@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 
 import {getUserData} from './actions/user.action';
 
@@ -10,6 +10,8 @@ import Footer from "./Components/Architecture/Footer/Footer";
 
 function AppWrapper(props) {
 
+    const [userId, setUserId] = useState('');
+
     async function getUserData() {
         props.getUserData()
     }
@@ -17,13 +19,14 @@ function AppWrapper(props) {
     useEffect(function(){
         if (localStorage.getItem('token')) {
             getUserData();
+            setUserId(props.user)
         }
     }, []);
 
     return(
         <>
             <Header />
-            <Main />
+            <Main userId={userId} />
             <Footer />
         </>
     )

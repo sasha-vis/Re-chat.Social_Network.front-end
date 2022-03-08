@@ -16,15 +16,15 @@ import PrivateRoute from "./../../Hoc/PrivateRoute.js";
 import AuthorizedPrivateRoute from "../../Hoc/AuthorizedPrivateRoute";
 import EditProfile from "./Pages/EditProfile";
 
-function Main() {
+function Main(props) {
     return (
         <div className="page-block">
             <div className="container">
                 <div className="page-block-wrapper">
 
                     <Routes>
-                        <Route exact path="/" element={<Posts />} />
-                        <Route exact path="*" element={<Posts />} />
+                        <Route exact path="/" element={<Posts userId={props.userId} />} />
+                        <Route exact path="*" element={<Posts userId={props.userId} />} />
                         <Route exact path="/SignUp" element={<AuthorizedPrivateRoute><SignUp /></AuthorizedPrivateRoute>} />
                         <Route exact path="/SignIn" element={<AuthorizedPrivateRoute><SignIn /></AuthorizedPrivateRoute>} />
                         <Route exact path="/Profile" element={<PrivateRoute><UserProfile /></PrivateRoute>} />
